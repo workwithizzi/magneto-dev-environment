@@ -1,0 +1,11 @@
+#!/bin/bash
+# Run a command as root-user
+# Previously called `rootnotty`
+source bin/utils
+CONTAINER="$CONT_MAGENTO"
+
+[ -z "$1" ] && print_error "Please specify a CLI command (ex. ls)" && exit
+
+docker-compose exec -u root -T "$CONTAINER" "$@"
+
+# docker exec -u root -t "$CONTAINER" "$@"

@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+source bin/utils
+
+source env/db.env
+if [ -t 0 ]; then
+  # Need tty to run mysql shell
+  bin/runtty mysql -h"${MYSQL_HOST}" -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" "$@"
+else
+  # Read from stdin, ex: bin/mysql < dbdump.sql
+  bin/run mysql -h"${MYSQL_HOST}" -u"${MYSQL_USER}" -p"${MYSQL_PASSWORD}" "${MYSQL_DATABASE}" "$@"
+fi

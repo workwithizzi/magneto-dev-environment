@@ -1,0 +1,10 @@
+#!/bin/bash
+#
+
+if ! bin/run ls bin/n98-magerun2.phar 1> /dev/null 2>&1; then
+  bin/run mkdir -p bin
+  bin/run curl https://files.magerun.net/n98-magerun2.phar -o bin/n98-magerun2.phar
+  bin/run chmod +x bin/n98-magerun2.phar
+fi
+
+bin/runtty bin/n98-magerun2.phar "$@"

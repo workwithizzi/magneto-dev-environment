@@ -1,0 +1,6 @@
+#!/bin/bash
+source bin/utils
+
+[ -z "$1" ] && print_error "Please specify a Magento command" && bin/run bin/magento list
+
+bin/runtty bin/magento "$@"

@@ -1,0 +1,11 @@
+#!/bin/bash
+# Run a command as app-user
+# Previously called `clinotty`
+source bin/utils
+CONTAINER="$CONT_MAGENTO"
+
+[ -z "$1" ] && print_error "Please specify a CLI command (ex. ls)" && exit
+
+docker-compose exec -T "$CONTAINER" "$@"
+
+# docker exec -t "$CONTAINER" "$@"

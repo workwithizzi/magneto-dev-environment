@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# User docker-compose for commands
+export USE_COMPOSE=true
+
+# Containers
+# Make sure to also change this in the docker-compose.yml
+export CONT_NGINX=mag_nginx
+export CONT_DB=mag_db
+export CONT_REDIS=mag_redis
+export CONT_ELASTICSEARCH=mag_elasticsearch
+export CONT_RABBITMQ=mag_rabbitmq
+export CONT_MAGENTO=mag_magento
+# Previously was called:
+# export PHPFPM=mg2_phpfpm
+export CRON=mag_cron
+
+# Other Vars
+export DEFAULT_MAGENTO_VERSION=with-samples-2.4.0
+export DEFAULT_BASE_URL=magento2.test
+
+export COMPOSER_AUTH_USERNAME=2527868a94ceaea97aaa3141c5364ec2
+export COMPOSER_AUTH_PASSWORD=0c4648c18df67132b6394ee04ec3b0e5
+export MYSQL_HOST=$CONT_DB
+export MYSQL_ROOT_PASSWORD=magento
+export MYSQL_DATABASE=magento
+export MYSQL_USER=magento
+export MYSQL_PASSWORD=magento
+export BASE_URL=$DEFAULT_BASE_URL
+export MAGENTO_ADMINURI=admin
+export MAGENTO_FIRSTNAME=John
+export MAGENTO_LASTNAME=Smith
+export MAGENTO_EMAIL=john.smith@gmail.com
+export MAGENTO_USERNAME=admin
+export MAGENTO_PASSWORD=password123
+export AMQP_HOST=$CONT_RABBITMQ
+export REDIS_SERVER=$CONT_REDIS
+export ELASTICSEARCH_HOST=$CONT_ELASTICSEARCH
+
+# ::::::::::::::::::::::::::
+
+print_error() { echo "🚀  $*"; }
+
+print_doing() { echo "🚀  $*"; }
+
+print_success() { echo "🎉  $*"; }
+
+doing() { echo "🚀  $*"; }
+
+print_waiting() { echo "⏸  $* Press [return] to continue."; read -r REPLY; }

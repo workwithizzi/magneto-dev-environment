@@ -1,0 +1,13 @@
+#!/bin/bash
+# Fix file ownership issues
+source bin/utils
+
+print_doing "Correcting filesystem ownerships"
+
+if [ -z "$1" ]; then
+  bin/runroot chown -R app:app /var/www/
+else
+  bin/runroot chown -R app:app /var/www/html/"$1"
+fi
+
+print_success "Filesystem ownerships corrected."

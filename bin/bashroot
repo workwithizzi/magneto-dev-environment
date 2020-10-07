@@ -1,0 +1,7 @@
+#!/bin/bash
+# Open an interactive terminal as root-user
+source bin/utils
+CONTAINER="$CONT_MAGENTO"
+
+# docker-compose exec -u root "$CONTAINER" bash
+docker exec -it -u root "$CONTAINER" bash

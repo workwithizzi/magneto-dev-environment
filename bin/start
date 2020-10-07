@@ -1,0 +1,12 @@
+#!/bin/bash
+# Build any images and start any containers
+source bin/utils
+IMAGE="$CONT_MAGENTO"
+
+print_doing "Starting containers"
+docker-compose -f docker-compose.yml up -d --remove-orphans
+
+# docker build -t yisraelgrimes/"$IMAGE":latest .
+# docker container run -d --name "$IMAGE" yisraelgrimes/"$IMAGE":latest
+
+[ -z "$1" ] && bin/info

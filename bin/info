@@ -1,0 +1,15 @@
+#!/bin/bash
+# Print's info about the project for easy reference
+source bin/utils
+
+
+echo "::::::::::::::::::::::::"
+echo "::::::::::INFO::::::::::"
+echo "::::::::::::::::::::::::"
+echo "url:       https://$BASE_URL"
+echo "login:     https://$BASE_URL/$MAGENTO_ADMINURI"
+echo "username:  $MAGENTO_USERNAME"
+echo "password:  $MAGENTO_PASSWORD"
+echo "name:      $MAGENTO_FIRSTNAME $MAGENTO_LASTNAME"
+echo "email:     $MAGENTO_EMAIL"
+echo "::::::::::::::::::::::::"
