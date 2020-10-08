@@ -18,42 +18,45 @@ echo ""
 echo "::::::::::::::::::::::::"
 echo "::::::::COMMANDS::::::::"
 echo "::::::::::::::::::::::::"
-echo "n98-magerun2  Executes 'bin/n98-magerun2.phar' in container."
-echo "  Options     Accepts normal sub-commands"
+echo "n98-magerun2     Executes 'bin/n98-magerun2.phar' in container."
+echo "  Options        Accepts normal sub-commands"
 
-echo "bash          Opens an interactive terminal as in container as 'app' user"
+echo "bash             Opens an interactive terminal as in container as 'app' user"
 
-echo "bashroot      Opens an interactive terminal as in container as 'root' user"
+echo "bashroot         Opens an interactive terminal as in container as 'root' user"
 
-echo "composer      Executes 'composer' command in container"
-echo "  Options     Accepts normal composer sub-commands"
-echo "configure     Installs and configures Magento"
-echo "              Fixes and file ownership/permissions issues"
-echo "              Updates composer"
+echo "composer         Executes 'composer' command in container"
+echo "  Options        Accepts normal composer sub-commands"
+echo "configure        Installs and configures Magento"
+echo "                 Fixes and file ownership/permissions issues"
+echo "                 Updates composer"
 
-echo "copyfrom      Copies files from Magento root in container to local src/ directory"
-echo "  Options     --all: All files in root directory to local src/"
-echo "              any file/directory with path from root"
+echo "copyfrom         Copies files from Magento root in container to local src/ directory"
+echo "  Options        --all: All files in root directory to local src/"
+echo "                 - any file/directory with path from root"
 
-echo "copyto        Exact oposite of 'copyfrom' command"
+echo "copyto           Exact oposite of 'copyfrom' command"
 
-echo "download      Downloads a specific version of Magento if it's not already downloaded"
-echo "              Extracts the archive to the local project folder"
-echo "  Options     The specific version of Magento to download"
+echo "download         Downloads a specific version of Magento if it's not already downloaded"
+echo "                 Extracts the archive to the local project folder"
+echo "  Options        The specific version of Magento to download"
 
-echo "fixowns       Fixes file ownership issues in container. Defaults to updating all files in root directory"
-echo "  Options     specific file/directory with path from root"
+echo "fixowns          Fixes file ownership issues in container."
+echo "                 Defaults to updating all files in root directory"
+echo "  Options        specific file/directory with path from root"
 
-echo "fixperms      Fixes file permissions issues in container"
-echo "  Options     specific file/directory with path from root"
+echo "fixperms         Fixes file permissions issues in container"
+echo "  Options        specific file/directory with path from root"
 
-echo "info          Prints this"
+echo "info             Prints this"
 
-echo "init          Starts up the project from scratch. Don't use this once the containers have been initially built and Magento has been configured."
-echo "  Options     -s: Skips the interactive questions and uses default settings"
+echo "init             Starts up the project from scratch. Don't use this"
+echo "                 once the containers have been initially built and"
+echo "                 Magento has been configured."
+echo "  Options        -s: Skips the interactive questions and uses default settings"
 
-echo "magneto       Executes 'bin/magento' command in container"
-echo "  Options     Accepts normal magento sub-commands"
+echo "magneto          Executes 'bin/magento' command in container"
+echo "  Options        Accepts normal magento sub-commands"
 
 echo "magento-refresh  Executes several magento commands together:"
 echo "                 - bin/magento setup:upgrade"
@@ -64,4 +67,22 @@ echo "                 - bin/magento cache:flush"
 echo "mysql            Executes 'mysql' commands in the mysql container"
 echo "  Options        Accepts normal mysql sub-commands"
 
-echo "mysqldump        Executes 'mysql' commands in the mysql container"
+echo "mysqldump        Dumps database with mysqldump cli client to stdout"
+echo "  Options        All normal sub-commands"
+
+echo "remove           Stops and removes all containers"
+
+echo "restart          Stops and then starts all containers"
+
+echo "run              Executes a cli command in container as 'app' user"
+
+echo "runroot          Executes a cli command in container as 'root' user"
+
+echo "runtty           Executes a cli command in container as 'app' user (with tty"
+
+echo "setup-ssl        Installs an SSL certificate for the local dev url"
+echo "  Options        Requires the domain name"
+
+echo "start            Starts all containers using docker-compose"
+
+echo "stop             Stops all containers using docker-compose"
