@@ -21,6 +21,8 @@ echo "::::::::::::::::::::::::"
 echo "n98-magerun2     Executes 'bin/n98-magerun2.phar' in container."
 echo "  Options        Accepts normal sub-commands"
 
+echo "backupdb         Creates backup of mysql db in the 'db/' directory"
+
 echo "bash             Opens an interactive terminal as in container as 'app' user"
 
 echo "bashroot         Opens an interactive terminal as in container as 'root' user"
