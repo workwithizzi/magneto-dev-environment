@@ -1,5 +1,5 @@
 #!/bin/bash
-#
+# Installs and configures Magento
 source bin/utils
 
 # ! Because /var/www is mounted as a volume, this has to be done after container is built:

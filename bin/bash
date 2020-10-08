@@ -1,6 +1,5 @@
 #!/bin/bash
-# Open an interactive terminal as app-user
-# Previously called `bash`
+# Opens an interactive terminal as app-user
 source bin/utils
 CONTAINER="$CONT_MAGENTO"
 

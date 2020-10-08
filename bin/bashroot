@@ -1,5 +1,5 @@
 #!/bin/bash
-# Open an interactive terminal as root-user
+# Open an interactive terminal in container as root-user
 source bin/utils
 CONTAINER="$CONT_MAGENTO"
 

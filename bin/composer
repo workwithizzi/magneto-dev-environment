@@ -1,4 +1,5 @@
 #!/bin/bash
+# Executes 'composer' command in container
 source bin/utils
 
 [ -z "$1" ] && print_error "Please specify a composer command" && bin/run composer --help

@@ -1,5 +1,5 @@
 #!/bin/bash
-#
+# Executes 'bin/n98-magerun2.phar' in container.
 
 if ! bin/run ls bin/n98-magerun2.phar 1> /dev/null 2>&1; then
   bin/run mkdir -p bin

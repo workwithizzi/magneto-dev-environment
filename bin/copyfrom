@@ -1,5 +1,5 @@
 #!/bin/bash
-#
+# Copies files from container to local directories
 source bin/utils
 CONTAINER=$CONT_MAGENTO
 

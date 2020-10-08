@@ -1,5 +1,5 @@
 #!/bin/bash
-# Fix file ownership issues
+# Fix file permissions issues
 source bin/utils
 
 print_doing "Correcting filesystem permissions"
