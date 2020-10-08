@@ -9,4 +9,6 @@ docker-compose -f docker-compose.yml up -d --remove-orphans
 # docker build -t yisraelgrimes/"$IMAGE":latest .
 # docker container run -d --name "$IMAGE" yisraelgrimes/"$IMAGE":latest
 
-[ -z "$1" ] && bin/info
+if [ -z "$1" ]; then
+	bin/info
+fi

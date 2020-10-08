@@ -4,53 +4,62 @@ source bin/utils
 
 # Gather project info:
 
-# # Get the dev url, fall back to default
-# echo "❓ What do you want the project url to be?"
-# echo "   Default: $DEFAULT_BASE_URL"
-# read -r REPLY_URL
-# BASE_URL=${REPLY_URL:-$DEFAULT_BASE_URL}
-# TODO: Change this back
-BASE_URL=$DEFAULT_BASE_URL
+# Get the dev url, fall back to default
+if [ -z "$1" ] || [ "$1" != "-s" ]; then
+	echo "❓ What do you want the project url to be?"
+	echo "   Default: $DEFAULT_BASE_URL"
+	read -r REPLY_URL
+	BASE_URL=${REPLY_URL:-$DEFAULT_BASE_URL}
+else
+	BASE_URL=$DEFAULT_BASE_URL
+fi
 
 # Get the Magento version, fall back to default
-# echo "❓ Which version of Magento do you want to use?"
-# echo "   To include sample data, prefix the version with:"
-# echo "   with-samples-"
-# echo "   Default: $DEFAULT_MAGENTO_VERSION"
-# read -r REPLY_VERSION
-# MAG_VERSION=${REPLY_VERSION:-$DEFAULT_MAGENTO_VERSION}
-# TODO: change this back
-MAG_VERSION=$DEFAULT_MAGENTO_VERSION
+if [ -z "$1" ] || [ "$1" != "-s" ]; then
+	echo "❓ Which version of Magento do you want to use?"
+	echo "   To include sample data, prefix the version with:"
+	echo "   with-samples-"
+	echo "   Default: $DEFAULT_MAGENTO_VERSION"
+	read -r REPLY_VERSION
+	MAG_VERSION=${REPLY_VERSION:-$DEFAULT_MAGENTO_VERSION}
+else
+	MAG_VERSION=$DEFAULT_MAGENTO_VERSION
+fi
 
-# # :::::::::::::::::::::::::::::::::::::
+echo "❓ Do you want go ahead and install/configure Magento? [y|n]"
+read -r REPLY_CONFIG
 
-# # Create DNS host entry for the site on local machine:
-# echo "❓ Do you want to create a DNS entry on your machine for:"
-# echo "   $BASE_URL  ?  [y|n]"
-# read -r REPLY_DNS
-# if [[ $REPLY_DNS =~ ^[y]$ ]]; then
-# 	echo "127.0.0.1 ::1 $BASE_URL" | sudo tee -a /etc/hosts
-# fi
+# :::::::::::::::::::::::::::::::::::::
 
-# # :::::::::::::::::
-# # Stop any running containers
-# # TODO
+# Create DNS host entry for the site on local machine:
+if [ -z "$1" ] || [ "$1" != "-s" ]; then
+	echo "❓ Do you want to create a DNS entry on your machine for:"
+	echo "   $BASE_URL  ?  [y|n]"
+	read -r REPLY_DNS
+	if [[ $REPLY_DNS =~ ^[y]$ ]]; then
+		echo "127.0.0.1 ::1 $BASE_URL" | sudo tee -a /etc/hosts
+	fi
+fi
+
+# :::::::::::::::::
+# Stop any running containers
 bin/stop
 
-# # :::::::::::::::::
-# # Download Magento to local machine if its not already downloaded
-# # Extract core files to project ./tmp directory if it's not already there.
-# # TODO: Add this back to the process. Removing for now to speed up testing/dev
+# :::::::::::::::::
+# Download Magento to local machine if its not already downloaded
+# Extract core files to project ./tmp directory if it's not already there.
 bin/download "$MAG_VERSION"
 
-# # :::::::::::::::::
-# # Build/Start any containers
+# :::::::::::::::::
+# Build/Start any containers
 bin/start FROM_INIT
 
-# # :::::::::::::::::
+# :::::::::::::::::
 # Setup SSL on local machine
 bin/setup-ssl "$BASE_URL"
 
-# # :::::::::::::::::
+# :::::::::::::::::
 # Run this to configure magento env in new container
-# bin/configure
+if [[ $REPLY_CONFIG =~ ^[y]$ ]]; then
+	bin/configure
+fi

@@ -67,14 +67,7 @@ print_doing "Clearing the cache to apply updates"
 bin/magento cache:flush
 
 print_doing "Disabling Two-Factor Authentication for local development"
-bin/magento module:disable Magento_TwoFactorAuth
+bin/magento module:disable Magento_TwoFactorAuth --clear-static-content
 
-print_success "Your project should be ready to go. You can visit it at:"
+print_success "Your project should be ready to go. Details:"
 bin/info
-
-
-# bin/magento config:set twofactorauth/general/enable 0
-
-# bin/magento config:set general/single_store_mode/enabled 1
-
-bin/runroot sed -i -e "s/memory_limit = 4G/memory_limit = -1/g" "/usr/local/etc/php/php.ini"
