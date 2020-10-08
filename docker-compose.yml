@@ -26,7 +26,7 @@ services:
       - ./src/app/etc:/var/www/html/app/etc:cached
       - ./src/composer.json:/var/www/html/composer.json:cached
       - ./src/composer.lock:/var/www/html/composer.lock:cached
-      - ./.tmp/nginx.conf.sample:/var/www/html/nginx.conf:cached
+      - ./env/nginx.conf:/var/www/html/nginx.conf:cached
       #- ./src/auth.json:/var/www/html/auth.json:cached
       #- ./src/m2-hotfixes:/var/www/html/m2-hotfixes:cached
       #- ./src/patches:/var/www/html/patches:cached
@@ -37,12 +37,6 @@ services:
       # Linux only: remove the above lines and mount the entire src directory with:
       #- ./src:/var/www/html:cached
 
-  # mag_magento:
-  #   image: markoshust/magento-php:7.4-fpm-0
-  #   container_name: mag_magento
-  #   links:
-  #     - mag_db
-  #   volumes: *appvolumes
   mag_magento:
     build: ./
     image: yisraelgrimes/mag_magento
@@ -63,7 +57,6 @@ services:
 
   mag_redis:
     image: redis:5.0
-    # Need to change container name
     container_name: mag_redis
 
   mag_elasticsearch:
@@ -87,6 +80,7 @@ services:
   # dev
   mailhog:
     image: mailhog/mailhog
+    container_name: mag_mailhog
     ports:
       - "1025"
       - "8025:8025"
