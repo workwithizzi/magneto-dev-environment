@@ -69,6 +69,12 @@ echo "                 - bin/magento cache:flush"
 echo "mysql            Executes 'mysql' commands in the mysql container"
 echo "  Options        Accepts normal mysql sub-commands"
 
+echo "mysqlexport      Full db dump to db/ directory"
+echo "                 - Title defaults to 'timestamp_magento.sql"
+echo "  Options        Use a custom title for the filename"
+
+echo "mysqlimport"
+
 echo "mysqldump        Dumps database with mysqldump cli client to stdout"
 echo "  Options        All normal sub-commands"
 
@@ -84,6 +90,12 @@ echo "runtty           Executes a cli command in container as 'app' user (with t
 
 echo "setup-ssl        Installs an SSL certificate for the local dev url"
 echo "  Options        Requires the domain name"
+
+echo "snapshot         Creates a snapshot of the current state of the project"
+echo "                 - includes DB backup"
+echo "                 - copy of src/ directory"
+echo "                 - saved to _ref/snapshots/timestamp/"
+echo "  Options        Add custom text to directory and db name for reference"
 
 echo "start            Starts all containers using docker-compose"
 

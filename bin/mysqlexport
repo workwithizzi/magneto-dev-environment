@@ -1,0 +1,18 @@
+#!/bin/bash
+# Creates backup of mysql db in the 'db/' directory
+source bin/utils
+
+if [ -z "$1" ]; then
+	TIME="$(date +'%y%m%d_%H%M%S')"
+	FILE_NAME="${TIME}_magento.sql"
+else
+	FILE_NAME="$*.sql"
+fi
+
+if [ ! -d "db" ]; then
+	mkdir -p "db"
+fi
+
+print_doing "Creating a db dump at db/$FILE_NAME"
+
+bin/n98-magerun2 db:dump --stdout > "db/$FILE_NAME"
