@@ -1,5 +1,3 @@
 #!/bin/bash
-# Stop and then Start all containers using docker-compose
-
-bin/stop
-bin/start
+bin/stop "$@"
+bin/start "$@"

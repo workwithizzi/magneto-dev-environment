@@ -1,2 +1,34 @@
 #!/bin/bash
-docker-compose -f docker-compose.yml rm --stop
+source bin/utils
+
+# Remove Containers
+if [ -z "$1" ] || [ "$1" == "-all" ]; then
+	print_doing "Removing containers"
+	# docker-compose -f docker-compose.yml rm --stop
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml rm --stop
+fi
+
+# Remove Volumes
+if [ "$1" == "-v" ] || [ "$1" == "-all" ]; then
+	print_doing "Removing volumes"
+	current_folder=${PWD##*/}
+	volume_prefix=`echo $current_folder | awk '{print tolower($0)}' | sed 's/\.//g'`
+	docker volume rm "${volume_prefix}_appdata"
+	docker volume rm "${volume_prefix}_dbdata"
+	docker volume rm "${volume_prefix}_rabbitmqdata"
+	docker volume rm "${volume_prefix}_sockdata"
+	docker volume rm "${volume_prefix}_ssldata"
+fi
+
+
+# Remove Images
+if [ "$1" == "-i" ]; then
+	print_doing "Removing images"
+	docker image rm percona
+	docker image rm rabbitmq
+	docker image rm mailhog/mailhog
+	docker image rm markoshust/magento-php
+	docker image rm redis
+	docker image rm markoshust/magento-elasticsearch
+	docker image rm markoshust/magento-nginx
+fi
