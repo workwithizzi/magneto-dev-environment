@@ -21,11 +21,14 @@ services:
       - sockdata:/sock
       - ssldata:/etc/nginx/certs
       # Host mounts with performance penalty, only put what is necessary here
-      - ./src/app/code:/var/www/html/app/code:cached
-      - ./src/app/design:/var/www/html/app/design:cached
-      - ./src/app/etc:/var/www/html/app/etc:cached
-      - ./src/composer.json:/var/www/html/composer.json:cached
-      - ./src/composer.lock:/var/www/html/composer.lock:cached
+      - ./src/composer.json:/var/www/html/composer.json
+      - ./src/composer.lock:/var/www/html/composer.lock
+      - ./src/index.php:/var/www/html/index.php
+      - ./src/app/code:/var/www/html/app/code
+      - ./src/app/design:/var/www/html/app/design
+      - ./src/app/etc:/var/www/html/app/etc
+      - ./src/pub/media/catalog:/var/www/html/pub/media/catalog
+      - ./src/pub/media/downloadable:/var/www/html/pub/media/downloadable
       - ./env/nginx.conf:/var/www/html/nginx.conf:cached
       #- ./src/auth.json:/var/www/html/auth.json:cached
       #- ./src/m2-hotfixes:/var/www/html/m2-hotfixes:cached

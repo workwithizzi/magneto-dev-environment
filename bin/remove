@@ -1,2 +1,25 @@
 #!/bin/bash
-docker-compose -f docker-compose.yml rm --stop
+source bin/utils
+IMAGE="$CONT_MAGENTO"
+
+if [ -z "$1" ]; then
+	docker-compose -f docker-compose.yml rm --stop
+fi
+
+if [ "$1" == "--all" ]; then
+	docker-compose -f docker-compose.yml rm --stop
+
+	docker image rm "yisraelgrimes/$IMAGE"
+
+	if [ "$2" == "burn" ]; then
+		docker image rm "markoshust/magento-nginx"
+		docker image rm "percona"
+		docker image rm "markoshust/magento-elasticsearch"
+		docker image rm "rabbitmq"
+		docker image rm "mailhog/mailhog"
+	fi
+fi
+
+if [ "$1" == "image" ]; then
+	docker image rm "yisraelgrimes/$IMAGE"
+fi

@@ -26,7 +26,7 @@ else
 	MAG_VERSION=$DEFAULT_MAGENTO_VERSION
 fi
 
-echo "❓ Do you want go ahead and install/configure Magento? [y|n]"
+echo "❓ Do you want to go ahead and install/configure Magento? [y|n]"
 read -r REPLY_CONFIG
 
 # :::::::::::::::::::::::::::::::::::::
