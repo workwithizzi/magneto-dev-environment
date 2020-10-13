@@ -1,7 +1,2 @@
 #!/bin/bash
-# Opens an interactive terminal as app-user
-source bin/utils
-CONTAINER="$CONT_MAGENTO"
-
-docker-compose exec "$CONTAINER" bash
-# docker exec -it "$CONTAINER" bash
+bin/cli bash

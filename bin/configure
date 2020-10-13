@@ -1,57 +1,21 @@
 #!/bin/bash
-# Installs and configures Magento
+# Install and configure Magento
 source bin/utils
+source env/db.env
 
-# ! Because /var/www is mounted as a volume, this has to be done after container is built:
-# as root:
-bin/fixowns
-bin/fixperms
+# Make sure magento is executable
+# bin/rootnotty chmod u+x bin/magento
+bin/clinotty chmod u+x bin/magento
 
-# as app:
-print_doing "Authorizing Composer"
-bin/composer config http-basic.repo.magento.com "$COMPOSER_AUTH_USERNAME" "$COMPOSER_AUTH_PASSWORD"
+bin/clinotty composer config http-basic.repo.magento.com "$COMPOSER_AUTH_USERNAME" "$COMPOSER_AUTH_PASSWORD"
+COMPOSER_AUTH_USERNAME=''
+COMPOSER_AUTH_PASSWORD=''
 
-print_doing "Reinstalling composer dependencies"
-bin/composer global require hirak/prestissimo
 
-print_doing "Updating dependencies"
-bin/composer update
+print_doing "Forcing reinstall of composer deps to ensure perms & reqs..."
+bin/clinotty composer global require hirak/prestissimo
+bin/clinotty composer update
 
-print_doing "Configuring Magento"
-bin/magento setup:install \
-	--db-host="$MYSQL_HOST" \
-	--db-name="$MYSQL_DATABASE" \
-	--db-user="$MYSQL_USER" \
-	--db-password="$MYSQL_PASSWORD" \
-	--base-url=https://"$BASE_URL"/ \
-	--base-url-secure=https://"$BASE_URL"/ \
-	--backend-frontname="$MAGENTO_ADMINURI" \
-	--admin-firstname="$MAGENTO_FIRSTNAME" \
-	--admin-lastname="$MAGENTO_LASTNAME" \
-	--admin-email="$MAGENTO_EMAIL" \
-	--admin-user="$MAGENTO_USERNAME" \
-	--admin-password="$MAGENTO_PASSWORD" \
-	--language=en_US \
-	--currency=USD \
-	--timezone=America/New_York \
-	--amqp-host="$AMQP_HOST" \
-	--amqp-port=5672 \
-	--amqp-user=guest \
-	--amqp-password=guest \
-	--amqp-virtualhost=/ \
-	--cache-backend=redis \
-	--cache-backend-redis-server="$REDIS_SERVER" \
-	--cache-backend-redis-db=0 \
-	--page-cache=redis \
-	--page-cache-redis-server="$REDIS_SERVER" \
-	--page-cache-redis-db=1 \
-	--session-save=redis \
-	--session-save-redis-host="$REDIS_SERVER" \
-	--session-save-redis-log-level=4 \
-	--session-save-redis-db=2 \
-	--search-engine=elasticsearch7 \
-	--elasticsearch-host="$ELASTICSEARCH_HOST" \
-	--use-rewrites=1
 
 # print_doing "Turning on developer mode"
 # bin/magento deploy:mode:set developer
@@ -71,3 +35,10 @@ bin/magento setup:install \
 
 # print_success "Your project should be ready to go. Details:"
 # bin/info
+
+print_doing "Clearing the cache to apply updates..."
+bin/clinotty bin/magento cache:flush
+
+print_doing "Copying files from container to host after install..."
+bin/copyfromcontainer app
+bin/copyfromcontainer vendor

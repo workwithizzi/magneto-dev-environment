@@ -1,16 +1,15 @@
 #!/bin/bash
-# Fix file permissions issues
 source bin/utils
 
-print_doing "Correcting filesystem permissions"
+print_doing "Correcting filesystem permissions..."
 
 if [ -z "$1" ]; then
-  bin/run find var vendor pub/static pub/media app/etc -type f -exec chmod u+w {} \;
-  bin/run find var vendor pub/static pub/media app/etc -type d -exec chmod u+w {} \;
-  bin/run chmod u+x bin/magento
+  bin/clinotty find var vendor pub/static pub/media app/etc -type f -exec chmod u+w {} \;
+  bin/clinotty find var vendor pub/static pub/media app/etc -type d -exec chmod u+w {} \;
+  bin/clinotty chmod u+x bin/magento
 else
-  bin/run find "$@" -type f -exec chmod u+w {} \;
-  bin/run find "$@" -type d -exec chmod u+w {} \;
+  bin/clinotty find "$@" -type f -exec chmod u+w {} \;
+  bin/clinotty find "$@" -type d -exec chmod u+w {} \;
 fi
 
-print_success "Filesystem permissions corrected"
+print_success "Filesystem permissions corrected."

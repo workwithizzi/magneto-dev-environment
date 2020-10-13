@@ -1,44 +1,47 @@
 #!/bin/bash
-# Download magneto locally and unzip it in the $MAG_DIR dir
 source bin/utils
-MAG_DIR=".tmp"
 
-[ -z "$1" ] && print_error "Please specify the version to download (ex. $DEFAULT_MAGENTO_VERSION)" && exit
-
-# If file isn't there, download it
-if [ ! -f "$HOME/.docker-magento/magento2-$1.tar.gz" ]; then
-		print_doing "Downloading magento2-$1"
-
-		mkdir -p "$HOME/.docker-magento"
-		(cd "$HOME/.docker-magento" && curl -OL "http://pubfiles.nexcess.net/magento/ce-packages/magento2-$1.tar.gz")
-fi
-
-# Fallback download to hypernode if archive doesn't
-# exist on Nexcess (smaller than 1MB)
-if [ "$(find "$HOME"/.docker-magento/magento2-"$1".tar.gz -size -1M)" ]; then
-		print_doing "Downloading magento2-$1"
-
-		(cd "$HOME/.docker-magento" && curl -o "magento2-$1.tar.gz" -OL "https://www.magento.mirror.hypernode.com/releases/magento-$1.tar.gz")
-fi
-
-
-# If $MAG_DIR/ dir isn't there, unzip and move magento core to directory
-if [ ! -d "$MAG_DIR" ]; then
-	print_doing "Extracting magento2-$1.tar.gz to '$MAG_DIR'"
-	mkdir -p "$MAG_DIR" && tar xzf "$HOME/.docker-magento/magento2-$1.tar.gz" -o -C "$MAG_DIR"
-
-	if [ -d "$MAG_DIR/vendor" ]; then
-		print_doing "Removing vendor dependencies from local install"
-		rm -rf "$MAG_DIR/vendor"
-	fi
+# Get the Magento version, fall back to default
+if [ -z "$1" ] || [ "$1" != "-s" ]; then
+	echo "❓ Which version of Magento do you want to use?"
+	echo "   To include sample data, prefix the version with:"
+	echo "   with-samples-"
+	echo "   Default: $DEFAULT_MAGENTO_VERSION"
+	read -r REPLY_VERSION
+	MAG_VERSION=${REPLY_VERSION:-$DEFAULT_MAGENTO_VERSION}
+elif [ "$1" == "-s" ]; then
+	MAG_VERSION=$DEFAULT_MAGENTO_VERSION
 else
-	echo "❓ Looks like you already have a '$MAG_DIR' directory."
+	MAG_VERSION="$1"
+fi
+
+
+if [ ! -f "$HOME/.docker-magento/magento2-$MAG_VERSION.tar.gz" ]; then
+		print_doing "Downloading magento2-$MAG_VERSION"
+    mkdir -p "$HOME/.docker-magento"
+    (cd "$HOME/.docker-magento" && curl -OL "http://pubfiles.nexcess.net/magento/ce-packages/magento2-$MAG_VERSION.tar.gz")
+fi
+
+# Fallback download to hypernode if archive doesn't exist on Nexcess (smaller than 1MB)
+if [ "$(find "$HOME"/.docker-magento/magento2-"$MAG_VERSION".tar.gz -size -1M)" ]; then
+    (cd "$HOME/.docker-magento" && curl -o "magento2-$MAG_VERSION.tar.gz" -OL "https://www.magento.mirror.hypernode.com/releases/magento-$MAG_VERSION.tar.gz")
+fi
+
+
+print_doing "Extracting magento2-$MAG_VERSION.tar.gz to '$EXTRACTION_DIR'"
+
+if [ -d "$EXTRACTION_DIR" ]; then
+	echo "❓ Looks like you already have a '$EXTRACTION_DIR' directory."
 	echo "   Do you want to replace it? [y|n]"
 	read -r REPLY_REPLACE
 	if [[ $REPLY_REPLACE =~ ^[y]$ ]]; then
-		print_doing "Replacing contents in $MAG_DIR/ with a fresh install"
-		rm -rf "$MAG_DIR"
+		print_doing "Replacing contents in $EXTRACTION_DIR"
+		rm -rf "$EXTRACTION_DIR"
 
-		mkdir -p "$MAG_DIR" && tar xzf "$HOME/.docker-magento/magento2-$1.tar.gz" -o -C "$MAG_DIR"
+		mkdir -p "$EXTRACTION_DIR" && tar xzf "$HOME/.docker-magento/magento2-$MAG_VERSION.tar.gz" -o -C "$EXTRACTION_DIR"
+		print_success "Files extracted"
 	fi
+else
+	mkdir -p "$EXTRACTION_DIR" && tar xzf "$HOME/.docker-magento/magento2-$MAG_VERSION.tar.gz" -o -C "$EXTRACTION_DIR"
+	print_success "Files extracted"
 fi

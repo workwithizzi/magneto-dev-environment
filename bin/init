@@ -5,25 +5,20 @@ source bin/utils
 # Gather project info:
 
 # Get the dev url, fall back to default
-if [ -z "$1" ] || [ "$1" != "-s" ]; then
+if [ "$1" != "-s" ]; then
 	echo "❓ What do you want the project url to be?"
-	echo "   Default: $DEFAULT_BASE_URL"
+	echo "   Default: $DEFAULT_URL"
 	read -r REPLY_URL
-	BASE_URL=${REPLY_URL:-$DEFAULT_BASE_URL}
+	BASE_URL=${REPLY_URL:-$DEFAULT_URL}
 else
-	BASE_URL=$DEFAULT_BASE_URL
+	BASE_URL=$DEFAULT_URL
 fi
 
-# Get the Magento version, fall back to default
-if [ -z "$1" ] || [ "$1" != "-s" ]; then
-	echo "❓ Which version of Magento do you want to use?"
-	echo "   To include sample data, prefix the version with:"
-	echo "   with-samples-"
-	echo "   Default: $DEFAULT_MAGENTO_VERSION"
-	read -r REPLY_VERSION
-	MAG_VERSION=${REPLY_VERSION:-$DEFAULT_MAGENTO_VERSION}
+if [ "$1" != "-s" ]; then
+	echo "❓ Do you want to go ahead and install/configure Magento in the container? [y|n]"
+	read -r REPLY_CONFIG
 else
-	MAG_VERSION=$DEFAULT_MAGENTO_VERSION
+	REPLY_CONFIG=y
 fi
 
 echo "❓ Do you want to go ahead and install/configure Magento? [y|n]"
@@ -31,8 +26,19 @@ read -r REPLY_CONFIG
 
 # :::::::::::::::::::::::::::::::::::::
 
+# Download Magento core files and unzip to .tmp/
+bin/download "$1"
+
+# Merge core files from .tmp/ to src/
+bin/merge "$1"
+
+# Remove dependencies
+if [ -d "src/vendor" ]; then
+	rm -rf "src/vendor"
+fi
+
 # Create DNS host entry for the site on local machine:
-if [ -z "$1" ] || [ "$1" != "-s" ]; then
+if [ "$1" != "-s" ]; then
 	echo "❓ Do you want to create a DNS entry on your machine for:"
 	echo "   $BASE_URL  ?  [y|n]"
 	read -r REPLY_DNS
@@ -41,25 +47,25 @@ if [ -z "$1" ] || [ "$1" != "-s" ]; then
 	fi
 fi
 
-# :::::::::::::::::
 # Stop any running containers
 bin/stop
 
-# :::::::::::::::::
-# Download Magento to local machine if its not already downloaded
-# Extract core files to project ./tmp directory if it's not already there.
-bin/download "$MAG_VERSION"
+# Start/build containers
+docker-compose -f docker-compose.yml up -d
 
-# :::::::::::::::::
-# Build/Start any containers
-bin/start FROM_INIT
+# [ $? != 0 ] && print_error "Failed to start Docker services" && exit
+sleep 5 #Ensure containers are started...
 
-# :::::::::::::::::
-# Setup SSL on local machine
-bin/setup-ssl "$BASE_URL"
+# Copy Magento files to container
+bin/copytocontainer -all
 
-# :::::::::::::::::
-# Run this to configure magento env in new container
+# Install and configure Magento
 if [[ $REPLY_CONFIG =~ ^[y]$ ]]; then
 	bin/configure
 fi
+
+print_doing "Generating SSL certificate..."
+bin/setup-ssl "$BASE_URL"
+
+print_success "Docker development environment setup complete."
+print_success "You may now access your Magento instance at https://${BASE_URL}/"

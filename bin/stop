@@ -2,7 +2,10 @@
 # Stops any running containers
 source bin/utils
 
-print_doing "Stopping any running containers"
-docker-compose -f docker-compose.yml stop
+if [ -z "$1" ]; then
+	print_doing "Stopping all running containers"
+else
+	print_doing "Stopping containers: $*"
+fi
 
-# docker container stop "$IMAGE"
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml stop "$@"
