@@ -1,11 +1,2 @@
 #!/bin/bash
-# Stops any running containers
-source bin/utils
-
-if [ -z "$1" ]; then
-	print_doing "Stopping all running containers"
-else
-	print_doing "Stopping containers: $*"
-fi
-
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml stop "$@"
