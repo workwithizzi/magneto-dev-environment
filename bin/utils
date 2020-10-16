@@ -1,0 +1,16 @@
+#!/bin/bash
+
+export DEFAULT_MAGENTO_VERSION=with-samples-2.4.0
+export EXTRACTION_DIR=".tmp"
+
+# ::::::::::::::::::::::::::
+
+print_error() { echo "🚀  $*"; }
+
+print_doing() { echo "🚀  $*"; }
+
+print_success() { echo "🎉  $*"; }
+
+doing() { echo "🚀  $*"; }
+
+print_waiting() { echo "⏸  $* Press [return] to continue."; read -r REPLY; }
