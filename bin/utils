@@ -2,15 +2,24 @@
 
 export DEFAULT_MAGENTO_VERSION=with-samples-2.4.0
 export EXTRACTION_DIR=".tmp"
+export DEFAULT_URL=magento2.test
+export COMPOSER_AUTH_USERNAME=2527868a94ceaea97aaa3141c5364ec2
+export COMPOSER_AUTH_PASSWORD=0c4648c18df67132b6394ee04ec3b0e5
+
+# Magento Config
+export LOGIN_URL=admin
+export ADMIN_FIRSTNAME=John
+export ADMIN_LASTNAME=Smith
+export ADMIN_EMAIL=john.smith@gmail.com
+export ADMIN_USERNAME=admin
+export ADMIN_PASSWORD=password123
 
 # ::::::::::::::::::::::::::
 
-print_error() { echo "🚀  $*"; }
+print_error() { echo "‼️  $*"; }
 
 print_doing() { echo "🚀  $*"; }
 
 print_success() { echo "🎉  $*"; }
-
-doing() { echo "🚀  $*"; }
 
 print_waiting() { echo "⏸  $* Press [return] to continue."; read -r REPLY; }
