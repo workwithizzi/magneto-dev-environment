@@ -1,0 +1,17 @@
+#!/bin/bash
+source bin/utils
+
+BASE_URL=${1:-$DEFAULT_URL}
+MAG_VERSION=${2:-$DEFAULT_MAGENTO_VERSION}
+
+echo "::::::::::::::::::::::::"
+echo "::::::::::INFO::::::::::"
+echo "::::::::::::::::::::::::"
+echo "url:             https://$BASE_URL"
+echo "login:           https://$BASE_URL/$LOGIN_URL"
+echo "username:        $ADMIN_USERNAME"
+echo "password:        $ADMIN_PASSWORD"
+echo "name:            $ADMIN_FIRSTNAME $ADMIN_LASTNAME"
+echo "email:           $ADMIN_EMAIL"
+echo "Magento Version: $MAG_VERSION"
+echo "::::::::::::::::::::::::"
