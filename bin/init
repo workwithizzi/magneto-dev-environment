@@ -1,0 +1,53 @@
+#!/bin/bash
+# Install and initial setup of the project
+source bin/utils
+
+# Gather project info:
+
+# Get the dev url, fall back to default
+BASE_URL=$DEFAULT_URL
+if [ "$1" != "-s" ]; then
+	echo "❓ What do you want the project url to be?"
+	echo "   Default: $DEFAULT_URL"
+	read -r REPLY_URL
+	BASE_URL=${REPLY_URL:-$DEFAULT_URL}
+fi
+
+# Create DNS host entry for the site on local machine:
+if [ "$1" != "-s" ]; then
+	echo "❓ Do you want to create a DNS entry on your machine for:"
+	echo "   $BASE_URL  ?  [y|N]"
+	read -r REPLY_DNS
+	if [[ $REPLY_DNS =~ ^[y]$ ]]; then
+		echo "127.0.0.1 ::1 $BASE_URL" | sudo tee -a /etc/hosts
+	fi
+fi
+
+# Get Magento version
+MAG_VERSION="$DEFAULT_MAGENTO_VERSION"
+if [ "$1" != "-s" ]; then
+	echo "❓ Which version of Magento do you want to use?"
+	echo "   To include sample data, prefix the version with:"
+	echo "   with-samples-"
+	echo "   Default: $DEFAULT_MAGENTO_VERSION"
+	read -r REPLY_VERSION
+	MAG_VERSION=${REPLY_VERSION:-$DEFAULT_MAGENTO_VERSION}
+fi
+
+# Get config preference
+CONFIG_MAGENTO=y
+if [ "$1" != "-s" ]; then
+	echo "❓ Do you want to go ahead and install/configure Magento in the container? [Y|n]"
+	read -r REPLY_CONFIG
+	CONFIG_MAGENTO=${REPLY_CONFIG:-"y"}
+fi
+
+# :::::::::::::::::::::::::::::::::::::
+
+# Download Magento core files and unzip to .tmp/
+bin/download "$MAG_VERSION"
+
+# Setup and Configure container and Magento
+bin/setup "$BASE_URL"
+
+bin/info "$BASE_URL" "$MAG_VERSION"
