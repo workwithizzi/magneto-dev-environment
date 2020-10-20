@@ -106,3 +106,4 @@ print_doing "Generating SSL certificate..."
 bin/setup-ssl "$BASE_URL"
 
 print_success "Docker development environment setup complete."
+print_success "You may now access your Magento instance at https://${BASE_URL}/"
