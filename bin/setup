@@ -10,7 +10,7 @@ docker-compose -f docker-compose.yml up -d
 sleep 5 #Ensure containers are started...
 
 print_doing "Copying all files from host to container..."
-rm -rf src/vendor #Clear for step below
+rm -rf "$CORE_DIR"/vendor #Clear for step below
 bin/copytocontainer --all
 
 bin/clinotty chmod u+x bin/magento

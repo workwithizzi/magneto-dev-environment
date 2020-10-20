@@ -1,6 +1,5 @@
 #!/bin/bash
 source bin/utils
-# TODO: Clean this up
 
 # Ask for the Magento version - no option passed
 if [ -z "$1" ]; then
@@ -32,8 +31,9 @@ if [ $(find ~/.docker-magento/magento2-$MAG_VERSION.tar.gz -size -1M) ]; then
     (cd ~/.docker-magento && curl -o magento2-$MAG_VERSION.tar.gz -OL https://www.magento.mirror.hypernode.com/releases/magento-$MAG_VERSION.tar.gz)
 fi
 
+
 # Remove old temp directory if exists
-[ -d "$CORE_DIR" ] && rm -rf "$CORE_DIR"
+[ -d "$EXTRACTION_DIR" ] && rm -rf "$EXTRACTION_DIR"
 
 # Final fallback. If no archive exists, let's use Composer!
 # Extract files to ".tmp/"
@@ -41,48 +41,47 @@ if [ $(find ~/.docker-magento/magento2-$MAG_VERSION.tar.gz -size -1M) ]; then
     print_error "Archive not found, or not yet available due to new version release."
     print_doing "Attempting install with Composer..."
 
-    composer create-project --repository=https://repo.magento.com/ --ignore-platform-reqs magento/project-community-edition=$MAG_VERSION "$CORE_DIR"
+    composer create-project --repository=https://repo.magento.com/ --ignore-platform-reqs magento/project-community-edition=$MAG_VERSION "$EXTRACTION_DIR"
 else
     echo "Extracting magento2-$MAG_VERSION.tar.gz to ./$CORE_DIR"
-    mkdir -p "$CORE_DIR" && tar xzf ~/.docker-magento/magento2-$MAG_VERSION.tar.gz -o -C $CORE_DIR
+    mkdir -p "$EXTRACTION_DIR" && tar xzf ~/.docker-magento/magento2-$MAG_VERSION.tar.gz -o -C $EXTRACTION_DIR
 fi
 
 # ::::::::::::::::::::::::::
 # Merge files into project directory
 
-# print_doing "Merging the downloaded Magento files with ./$CORE_DIR"
-# [ ! -d "$CORE_DIR" ] && mkdir -p "$CORE_DIR"
+print_doing "Merging the downloaded Magento files with ./$CORE_DIR"
+[ ! -d "$CORE_DIR" ] && mkdir -p "$CORE_DIR"
 
 # Remove some unneeded things
-# if [ -z "$2" ] || [ "$2" != "keep_files" ]; then
-# 	EXTRA_FILES=(
-# 		".htaccess.sample"
-# 		"CHANGELOG.md"
-# 		"COPYING.txt"
-# 		"Gruntfile.js.sample"
-# 		"LICENSE.txt"
-# 		"LICENSE_AFL.txt"
-# 		"SECURITY.md"
-# 		"auth.json.sample"
-# 		"grunt-config.json.sample"
-# 		"package.json.sample"
-# 	)
+if [ -z "$2" ] || [ "$2" != "keep_files" ]; then
+	EXTRA_FILES=(
+		".htaccess.sample"
+		"CHANGELOG.md"
+		"COPYING.txt"
+		"Gruntfile.js.sample"
+		"LICENSE.txt"
+		"LICENSE_AFL.txt"
+		"SECURITY.md"
+		"auth.json.sample"
+		"grunt-config.json.sample"
+		"package.json.sample"
+	)
 
-# 	for file in "${EXTRA_FILES[@]}"
-# 	do
-# 		[ -f "$EXTRACTION_DIR/$file" ] && rm "$EXTRACTION_DIR/$file"
-# 	done
+	for file in "${EXTRA_FILES[@]}"
+	do
+		[ -f "$EXTRACTION_DIR/$file" ] && rm "$EXTRACTION_DIR/$file"
+	done
 
-# 	[ -d "$EXTRACTION_DIR/.git" ] && rm -rf "$EXTRACTION_DIR/.git"
-# 	[ -d "$EXTRACTION_DIR/.github" ] && rm -rf "$EXTRACTION_DIR/.github"
-# 	# [ -d "$EXTRACTION_DIR/vendor" ] && rm -rf "$EXTRACTION_DIR/vendor"
-# fi
+	[ -d "$EXTRACTION_DIR/.git" ] && rm -rf "$EXTRACTION_DIR/.git"
+	[ -d "$EXTRACTION_DIR/.github" ] && rm -rf "$EXTRACTION_DIR/.github"
+	# [ -d "$EXTRACTION_DIR/vendor" ] && rm -rf "$EXTRACTION_DIR/vendor"
+fi
 
-# # Merge downloaded files with current without overwriting existing files
-# rsync --ignore-existing -raz "$EXTRACTION_DIR/" "$CORE_DIR/"
+# Merge downloaded files with current without overwriting existing files
+rsync --ignore-existing -raz "$EXTRACTION_DIR/" "$CORE_DIR/"
 
-# # Remove old temp directory if exists
-# [ -d "$EXTRACTION_DIR" ] && rm -rf "$EXTRACTION_DIR"
+# Remove old temp directory if exists
+[ -d "$EXTRACTION_DIR" ] && rm -rf "$EXTRACTION_DIR"
 
-# print_success "Files merged"
-print_success "Magento-core setup"
+print_success "Files merged"

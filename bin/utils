@@ -1,7 +1,10 @@
 #!/bin/bash
 
 export DEFAULT_MAGENTO_VERSION=with-samples-2.4.0
+# TODO: Remove extraction dir
 export EXTRACTION_DIR=".tmp"
+export CORE_DIR="core"
+export WIP_DIR="wip"
 export DEFAULT_URL=magento2.test
 export COMPOSER_AUTH_USERNAME=2527868a94ceaea97aaa3141c5364ec2
 export COMPOSER_AUTH_PASSWORD=0c4648c18df67132b6394ee04ec3b0e5
