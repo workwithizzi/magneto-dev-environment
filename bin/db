@@ -1,0 +1,47 @@
+#!/bin/bash
+# Import/export db in the 'db/' directory
+# bin/db -i path/to/my_db.sql
+# bin/db -e my_exported_db_name
+source bin/utils
+
+if [ -z "$1" ]; then
+	print_error "This command requires an argument."
+	echo "   If you want to import a db, use '-i'"
+	echo "   If you want to export a db, use '-e'"
+fi
+
+# Export DB
+if [[ "$1" == "-e" ||  "$1" == "export" ]]; then
+
+	if [ -z "$2" ]; then
+		TIME="$(date +'%y%m%d_%H%M%S')"
+		FILE_NAME="${TIME}_magento.sql"
+	else
+		FILE_NAME="$2.sql"
+	fi
+
+	[ ! -d "db" ] && mkdir -p "db"
+
+	print_doing "Creating a db dump at db/$FILE_NAME"
+	bin/n98-magerun2 db:dump --stdout > "db/$FILE_NAME"
+fi
+
+# Import DB
+if [[ "$1" == "-i" ||  "$1" == "import" ]]; then
+
+	if [ -z "$2" ]; then
+		print_error "You need to include the path/filename of the db you want to import."
+		echo "   Available db files:"
+		find "_ref" "db" -name "*.sql"
+	else
+		if [ -f "$2" ]; then
+			print_doing "db found... importing"
+			bin/mysql < "$2"
+		else
+			print_error "Local db cannot be found"
+			echo "   Available db files:"
+			find "_ref" "db" -name "*.sql"
+		fi
+	fi
+
+fi
