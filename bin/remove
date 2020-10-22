@@ -2,23 +2,39 @@
 source bin/utils
 
 if [[ -z "$1" || "$1" == "-c" ]]; then
-	# docker-compose -f docker-compose.yml -f docker-compose.dev.yml rm --stop
-	echo "stopping and removing containers"
-fi
-
-# if [ "$1" == "--all" ]; then
-# 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml rm --stop
-
-if [ "$1" == "-i" ]; then
-	echo "removing images"
+	print_doing "Stopping and removing containers"
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml rm --stop
 fi
 
 if [ "$1" == "-v" ]; then
-	echo "removing containers"
+	print_doing "Removing volumes"
+
+	current_folder=${PWD##*/}
+	volume_prefix=`echo $current_folder | awk '{print tolower($0)}' | sed 's/\.//g'`
+	docker volume rm ${volume_prefix}_appdata
+	docker volume rm ${volume_prefix}_dbdata
+	docker volume rm ${volume_prefix}_rabbitmqdata
+	docker volume rm ${volume_prefix}_sockdata
+	docker volume rm ${volume_prefix}_ssldata
 fi
 
-if [ "$1" == "-all" ]; then
+if [[ "$1" == "-cv" || "$1" == "-vc" ]]; then
 	bin/remove -c
-	bin/remove -i
 	bin/remove -v
+fi
+
+
+if [ "$1" == "-i" ]; then
+	print_doing "Removing images"
+	docker image rm "markoshust/magento-nginx"
+	docker image rm "percona"
+	docker image rm "markoshust/magento-elasticsearch"
+	docker image rm "rabbitmq"
+	docker image rm "mailhog/mailhog"
+fi
+
+if [[ "$1" == "-burn" || "$1" == "burn" ]]; then
+	bin/remove -c
+	bin/remove -v
+	bin/remove -i
 fi
