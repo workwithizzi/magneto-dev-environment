@@ -9,32 +9,32 @@ services:
   app:
     volumes: &appvolumes
       # Host mounts with performance penalty, only put what is necessary here
-      # - ./src/composer.json:/var/www/html/composer.json:cached
-      # - ./src/composer.lock:/var/www/html/composer.lock:cached
-      # - ./src/app/code:/var/www/html/app/code:cached
-      # - ./src/app/design:/var/www/html/app/design:cached
-      # - ./src/app/etc:/var/www/html/app/etc:cached
-      - ./project/index.php:/var/www/html/index.php:cached
-      - ./project/composer.json:/var/www/html/composer.json:cached
-      - ./project/composer.lock:/var/www/html/composer.lock:cached
-      - ./project/app/code:/var/www/html/app/code:cached
-      - ./project/app/design:/var/www/html/app/design:cached
-      - ./project/app/etc:/var/www/html/app/etc:cached
-      - ./src/app/etc/di.xml:/var/www/html/app/etc/di.xml:cached
-      - ./src/app/etc/env.php:/var/www/html/app/etc/env.php:cached
-      - ./src/app/etc/NonComposerComponentRegistration.php:/var/www/html/app/etc/NonComposerComponentRegistration.php:cached
-      - ./src/app/etc/registration_globlist.php:/var/www/html/app/etc/registration_globlist.php:cached
-      - ./src/app/etc/vendor_path.php:/var/www/html/app/etc/vendor_path.php:cached
-      - ./src/nginx.conf.sample:/var/www/html/nginx.conf:cached
-      #- ./src/auth.json:/var/www/html/auth.json:cached
-      #- ./src/m2-hotfixes:/var/www/html/m2-hotfixes:cached
-      #- ./src/patches:/var/www/html/patches:cached
-      #- ./src/var/log:/var/www/html/var/log:cached
-      #- ./src/var/report:/var/www/html/var/report:cached
+      # - ./core/composer.json:/var/www/html/composer.json:cached
+      # - ./core/composer.lock:/var/www/html/composer.lock:cached
+      # - ./core/app/code:/var/www/html/app/code:cached
+      # - ./core/app/design:/var/www/html/app/design:cached
+      # - ./core/app/etc:/var/www/html/app/etc:cached
+      - ./wip/index.php:/var/www/html/index.php:cached
+      - ./wip/composer.json:/var/www/html/composer.json:cached
+      - ./wip/composer.lock:/var/www/html/composer.lock:cached
+      - ./wip/app/code:/var/www/html/app/code:cached
+      - ./wip/app/design:/var/www/html/app/design:cached
+      - ./wip/app/etc:/var/www/html/app/etc:cached
+      - ./core/app/etc/di.xml:/var/www/html/app/etc/di.xml:cached
+      - ./core/app/etc/env.php:/var/www/html/app/etc/env.php:cached
+      - ./core/app/etc/NonComposerComponentRegistration.php:/var/www/html/app/etc/NonComposerComponentRegistration.php:cached
+      - ./core/app/etc/registration_globlist.php:/var/www/html/app/etc/registration_globlist.php:cached
+      - ./core/app/etc/vendor_path.php:/var/www/html/app/etc/vendor_path.php:cached
+      - ./core/nginx.conf.sample:/var/www/html/nginx.conf:cached
+      #- ./core/auth.json:/var/www/html/auth.json:cached
+      #- ./core/m2-hotfixes:/var/www/html/m2-hotfixes:cached
+      #- ./core/patches:/var/www/html/patches:cached
+      #- ./core/var/log:/var/www/html/var/log:cached
+      #- ./core/var/report:/var/www/html/var/report:cached
       # To sync your SSH to the container, uncomment the following line:
       #- ~/.ssh/id_rsa:/var/www/.ssh/id_rsa:cached
       # Linux only: remove the above lines and mount the entire src directory with:
-      # - ./src:/var/www/html:cached
+      # - ./core:/var/www/html:cached
 
   phpfpm:
     volumes: *appvolumes

@@ -1,3 +1,0 @@
-#!/bin/bash
-
-rsync --ignore-existing -raz "src/app/etc/" "project/app/etc/"

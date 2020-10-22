@@ -1,2 +1,24 @@
 #!/bin/bash
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml rm --stop
+source bin/utils
+
+if [[ -z "$1" || "$1" == "-c" ]]; then
+	# docker-compose -f docker-compose.yml -f docker-compose.dev.yml rm --stop
+	echo "stopping and removing containers"
+fi
+
+# if [ "$1" == "--all" ]; then
+# 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml rm --stop
+
+if [ "$1" == "-i" ]; then
+	echo "removing images"
+fi
+
+if [ "$1" == "-v" ]; then
+	echo "removing containers"
+fi
+
+if [ "$1" == "-all" ]; then
+	bin/remove -c
+	bin/remove -i
+	bin/remove -v
+fi
