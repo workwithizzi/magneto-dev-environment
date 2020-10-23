@@ -6,4 +6,4 @@ if ! bin/cmdnotty ls bin/n98-magerun2.phar 1> /dev/null 2>&1; then
   bin/cmdnotty curl https://files.magerun.net/n98-magerun2.phar -o bin/n98-magerun2.phar
   bin/cmdnotty chmod +x bin/n98-magerun2.phar
 fi
-bin/cli bin/n98-magerun2.phar "$@"
+bin/cmd bin/n98-magerun2.phar "$@"

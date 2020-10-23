@@ -7,7 +7,7 @@ MYSQL_INTEGRATION_CONFIG=dev/tests/integration/etc/install-config-mysql.php
 bin/cmdnotty mysql -h${MYSQL_INTEGRATION_HOST} -uroot -p${MYSQL_ROOT_PASSWORD} ${MYSQL_INTEGRATION_DATABASE} -e exit &> /dev/null ||
   bin/cmdnotty mysqladmin -h${MYSQL_INTEGRATION_HOST} -uroot -p${MYSQL_ROOT_PASSWORD} create ${MYSQL_INTEGRATION_DATABASE} &&
   echo "Database ${MYSQL_INTEGRATION_DATABASE} created." &&
-  bin/cli mysql -uroot -p${MYSQL_ROOT_PASSWORD} -h${MYSQL_INTEGRATION_HOST} \
+  bin/cmd mysql -uroot -p${MYSQL_ROOT_PASSWORD} -h${MYSQL_INTEGRATION_HOST} \
     -e "GRANT ALL PRIVILEGES ON ${MYSQL_INTEGRATION_DATABASE}.* TO '${MYSQL_INTEGRATION_USER}'@'%';FLUSH PRIVILEGES;"
 
 sed -e "s/'db-host' => 'localhost'/'db-host' => '${MYSQL_INTEGRATION_HOST}'/" \
