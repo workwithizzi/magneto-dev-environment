@@ -11,7 +11,7 @@ sleep 5 #Ensure containers are started...
 
 print_doing "Copying all files from host to container..."
 rm -rf "$CORE_DIR"/vendor #Clear for step below
-bin/copytocontainer --all
+bin/copytocontainer -all
 
 bin/cmdnotty chmod u+x bin/magento
 
