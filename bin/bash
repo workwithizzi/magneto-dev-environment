@@ -1,2 +1,6 @@
 #!/bin/bash
-bin/cmd bash
+# Open interactive process in container as 'app' user
+[ -z "$1" ] && bin/cmd bash
+
+# Open interactive process in container as 'root' user
+[[ "$1" == "-r" || "$1" == "r" || "$1" == "root" ]] && bin/root bash

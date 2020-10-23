@@ -1,7 +1,0 @@
-#!/bin/bash
-# TODO: add help info
-if [[ "$1" == "-h" || "$1" == "help" ]]; then
-	echo "Send Help"
-fi
-
-bin/root bash
