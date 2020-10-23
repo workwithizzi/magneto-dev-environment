@@ -13,7 +13,7 @@ print_doing "Copying all files from host to container..."
 rm -rf "$CORE_DIR"/vendor #Clear for step below
 bin/copytocontainer --all
 
-bin/clinotty chmod u+x bin/magento
+bin/cmdnotty chmod u+x bin/magento
 
 if hash composer 2>/dev/null; then
     PUBLIC_KEY="$(composer config -gl | grep '\[http-basic.repo.magento.com.username\]' | cut -c40-)"
@@ -40,16 +40,16 @@ if [ -z "$PUBLIC_KEY" ] || [ -z "$PRIVATE_KEY" ]; then
 fi
 
 if [ -n "$PUBLIC_KEY" ] && [ -n "$PRIVATE_KEY" ]; then
-    bin/clinotty composer config http-basic.repo.magento.com $PUBLIC_KEY $PRIVATE_KEY
+    bin/cmdnotty composer config http-basic.repo.magento.com $PUBLIC_KEY $PRIVATE_KEY
     PUBLIC_KEY=''
     PRIVATE_KEY=''
 fi
 
 print_doing "Forcing reinstall of composer deps to ensure perms & reqs..."
-bin/clinotty composer global require hirak/prestissimo
-bin/clinotty composer update
+bin/cmdnotty composer global require hirak/prestissimo
+bin/cmdnotty composer update
 
-bin/clinotty bin/magento setup:install \
+bin/cmdnotty bin/magento setup:install \
   --db-host="$MYSQL_HOST" \
   --db-name="$MYSQL_DATABASE" \
   --db-user="$MYSQL_USER" \
@@ -85,18 +85,18 @@ bin/clinotty bin/magento setup:install \
   --use-rewrites=1
 
 print_doing "Turning on developer mode.."
-bin/clinotty bin/magento deploy:mode:set developer
+bin/cmdnotty bin/magento deploy:mode:set developer
 
-bin/clinotty bin/magento indexer:reindex
+bin/cmdnotty bin/magento indexer:reindex
 
 print_doing "Forcing deploy of static content to speed up initial requests..."
-bin/clinotty bin/magento setup:static-content:deploy -f
+bin/cmdnotty bin/magento setup:static-content:deploy -f
 
 print_doing "Re-indexing with Elasticsearch..."
-bin/clinotty bin/magento indexer:reindex
+bin/cmdnotty bin/magento indexer:reindex
 
 print_doing "Clearing the cache to apply updates..."
-bin/clinotty bin/magento cache:flush
+bin/cmdnotty bin/magento cache:flush
 
 print_doing "Copying files from container to host after install..."
 bin/copyfromcontainer app

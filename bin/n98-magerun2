@@ -1,9 +1,9 @@
 #!/bin/bash
 # Executes 'bin/n98-magerun2.phar' in container.
 
-if ! bin/clinotty ls bin/n98-magerun2.phar 1> /dev/null 2>&1; then
-  bin/clinotty mkdir -p bin
-  bin/clinotty curl https://files.magerun.net/n98-magerun2.phar -o bin/n98-magerun2.phar
-  bin/clinotty chmod +x bin/n98-magerun2.phar
+if ! bin/cmdnotty ls bin/n98-magerun2.phar 1> /dev/null 2>&1; then
+  bin/cmdnotty mkdir -p bin
+  bin/cmdnotty curl https://files.magerun.net/n98-magerun2.phar -o bin/n98-magerun2.phar
+  bin/cmdnotty chmod +x bin/n98-magerun2.phar
 fi
 bin/cli bin/n98-magerun2.phar "$@"
