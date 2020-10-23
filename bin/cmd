@@ -1,5 +1,11 @@
 #!/bin/bash
 # Originally called 'cli'
-# Run a command in the container while keeping TTY abilities (for interactive process)
-[ -z "$1" ] && echo "Please specify a CLI command (ex. ls)" && exit
+source bin/utils
+
+if [[ -z "$1" || "$1" == "-h" ]]; then
+	title "cmd" "$2Run a command in the container while keeping TTY abilities"
+	desc "   $2(for interactive processes). Argument is required"
+	exit
+fi
+
 docker-compose exec phpfpm "$@"

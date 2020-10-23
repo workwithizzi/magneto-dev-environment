@@ -1,5 +1,12 @@
 #!/bin/bash
 # Originally called 'rootnotty'
-# Run a command in the container as 'root' without TTY (for non-interactive commands)
-[ -z "$1" ] && echo "Please specify a CLI command (ex. ls)" && exit
+source bin/utils
+
+# help
+if [[ -z "$1" || "$1" == "-h" ]]; then
+	title "cmdrootnotty" "$2Run a command in the container as 'root' without TTY"
+	desc "            $2(for non-interactive processes). Argument is required"
+	exit
+fi
+
 docker-compose exec -u root -T phpfpm "$@"
