@@ -1,5 +1,15 @@
 #!/bin/bash
 source env/db.env
+source bin/utils
+
+# help
+if [[ "$1" == "-h" ]]; then
+	title "mysql" "$2Runs 'mysql' command in container. Requires argument"
+	desc  "     $2Connects using variables defined in env/db.env"
+	exit
+fi
+
+
 if [ -t 0 ]; then
   # Need tty to run mysql shell
   bin/cmd mysql -h${MYSQL_HOST} -u${MYSQL_USER} -p${MYSQL_PASSWORD} ${MYSQL_DATABASE} "$@"

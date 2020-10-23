@@ -2,6 +2,15 @@
 source bin/utils
 # TODO: Clean this up
 
+# help
+if [[ "$1" == "-h" ]]; then
+	title "download" "$2Download and unarchive a specific version of Magento"
+	opts  "        $2"
+	opt   "        $2-s" "Skip questions and use defaults defined in bin/utils"
+	exit
+fi
+
+
 # Ask for the Magento version - no option passed
 if [ -z "$1" ]; then
 	echo "❓ Which version of Magento do you want to use?"

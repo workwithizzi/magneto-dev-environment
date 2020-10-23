@@ -1,8 +1,16 @@
 #!/bin/bash
 source bin/utils
 
+# help
+if [[ "$1" == "-h" ]]; then
+	title "dev-urn-catalog-generate" "$2Generate a misc.xml file that your IDE"
+	desc  "                        $2can use to recognize/highlight URNs"
+	desc  "                        $2Currently only set up for PHPStorm"
+	exit
+fi
+
 bin/magento dev:urn-catalog:generate misc.xml
 bin/copyfromcontainer misc.xml
 mv "$CORE_DIR"/misc.xml "$CORE_DIR"/.idea/misc.xml
 
-echo "URN's have been generated, you may now restart PHPStorm"
+print_success "URN's have been generated, you may now restart PHPStorm"

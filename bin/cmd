@@ -4,7 +4,7 @@ source bin/utils
 
 if [[ -z "$1" || "$1" == "-h" ]]; then
 	title "cmd" "$2Run a command in the container while keeping TTY abilities"
-	desc "   $2(for interactive processes). Argument is required"
+	desc  "   $2(for interactive processes). Argument is required"
 	exit
 fi
 

@@ -5,7 +5,7 @@ source bin/utils
 # help
 if [[ -z "$1" || "$1" == "-h" ]]; then
 	title "cmdnotty" "$2Run a command in the container without TTY"
-	desc "        $2(for non-interactive processes). Argument is required"
+	desc  "        $2(for non-interactive processes). Argument is required"
 	exit
 fi
 

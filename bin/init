@@ -2,6 +2,16 @@
 # Install and initial setup of the project
 source bin/utils
 
+# help
+if [[ "$1" == "-h" ]]; then
+	title "init" "$2Initialize the project for the first time"
+	desc  "    $2Downloads Magento, builds images/containers, configures Magento"
+	opts  "    $2"
+	opt   "    $2-s" "Skip questions and use defaults defined in bin/utils"
+	exit
+fi
+
+
 # Gather project info:
 
 # Get the dev url, fall back to default

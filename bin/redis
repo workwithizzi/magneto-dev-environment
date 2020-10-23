@@ -1,2 +1,11 @@
 #!/bin/bash
+source bin/utils
+
+if [[ -z "$1" || "$1" == "-h" ]]; then
+	title "redis" "$2Run a command in the 'redis' container"
+	desc  "     $2Argument is required"
+	exit
+fi
+
+
 docker-compose exec redis "$@"

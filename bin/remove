@@ -1,6 +1,19 @@
 #!/bin/bash
 source bin/utils
 
+# help
+if [[ "$1" == "-h" ]]; then
+	title "remove" "$2Remove project containers, images, and volumes"
+	opts  "      $2"
+	opt   "      $2-c" "   Default: Stop and remove connected running containers"
+	opt   "      $2-v" "   Remove connected volumes"
+	opt   "      $2-cv" "  Remove connected containers and volumes"
+	opt   "      $2-i" "   Remove connected images"
+	opt   "      $2-burn" "Remove everything connected to the project"
+	exit
+fi
+
+
 if [[ -z "$1" || "$1" == "-c" ]]; then
 	print_doing "Stopping and removing containers"
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml rm --stop

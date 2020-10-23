@@ -4,8 +4,8 @@ source bin/utils
 # help
 if [[ "$1" == "-h" ]]; then
 	title "bash" "$2Open interactive process in container as 'app' user"
-	opts "    $2"
-	opt "    $2r" "Use 'root' user instead of 'app'"
+	opts  "    $2"
+	opt   "    $2-r" "Use 'root' user instead of 'app'"
 	exit
 fi
 

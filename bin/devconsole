@@ -1,2 +1,10 @@
 #!/bin/bash
+source bin/utils
+
+# help
+if [[ "$1" == "-h" ]]; then
+	title "devconsole" "$2Opens PHP interactive shell with initialized Magento Admin-Store."
+	exit
+fi
+
 bin/cmd bin/n98-magerun2.phar dev:console

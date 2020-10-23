@@ -6,26 +6,27 @@ REAL_CORE=$(cd -P "$CORE_DIR" && pwd)
 # help
 if [[ -z "$1" || "$1" == "-h" ]]; then
 	title "copytocontainer" "$2Copy files and directories to the container. From:"
-	desc "$2               $REAL_CORE"
-	desc "$2               Fix file ownership and permissions"
-	opts "$2               "
-	opt "$2               -all" "Copy all files to web root"
-	opt "$2                   " "Specify a specific file/folder to copy"
+	desc "               $2$REAL_CORE"
+	desc "               $2Fix file ownership and permissions"
+	opts "               $2"
+	opt "               $2-all" "Copy all files to web root"
+	opt "                   $2" "Specify a specific file/folder to copy"
 	exit
 fi
 
+
 if [ "$1" == "-all" ]; then
-  docker cp $REAL_CORE/./ $(docker-compose ps -q phpfpm|awk '{print $1}'):/var/www/html/
-  echo "Completed copying all files from host to container"
-  bin/fixowns
-  bin/fixperms
+	docker cp $REAL_CORE/./ $(docker-compose ps -q phpfpm|awk '{print $1}'):/var/www/html/
+	print_success "Completed copying all files from host to container"
+	bin/fixowns
+	bin/fixperms
 else
-  if [ -f "$REAL_CORE/$1" ]; then
-    docker cp $REAL_CORE/$1 $(docker-compose ps -q phpfpm|awk '{print $1}'):/var/www/html/$1
-  else
-    docker cp $REAL_CORE/$1 $(docker-compose ps -q phpfpm|awk '{print $1}'):/var/www/html/$(dirname $1)
-  fi
-  echo "Completed copying $1 from host to container"
-  bin/fixowns $1
-  bin/fixperms $1
+	if [ -f "$REAL_CORE/$1" ]; then
+		docker cp $REAL_CORE/$1 $(docker-compose ps -q phpfpm|awk '{print $1}'):/var/www/html/$1
+	else
+		docker cp $REAL_CORE/$1 $(docker-compose ps -q phpfpm|awk '{print $1}'):/var/www/html/$(dirname $1)
+	fi
+	print_success "Completed copying $1 from host to container"
+	bin/fixowns $1
+	bin/fixperms $1
 fi

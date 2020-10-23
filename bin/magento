@@ -1,2 +1,10 @@
 #!/bin/bash
+source bin/utils
+
+# help
+if [[ -z "$1" || "$1" == "-h" ]]; then
+	title "magento" "$2Runs 'bin/magento in container. Requires argument"
+	exit
+fi
+
 bin/cmd bin/magento "$@"

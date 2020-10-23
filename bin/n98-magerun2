@@ -1,5 +1,12 @@
 #!/bin/bash
-# Executes 'bin/n98-magerun2.phar' in container.
+source bin/utils
+
+# help
+if [[ -z "$1" || "$1" == "-h" ]]; then
+	title "n98-magerun2" "$2Executes 'bin/n98-magerun2.phar' in container."
+	exit
+fi
+
 
 if ! bin/cmdnotty ls bin/n98-magerun2.phar 1> /dev/null 2>&1; then
   bin/cmdnotty mkdir -p bin

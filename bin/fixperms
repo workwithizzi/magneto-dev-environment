@@ -1,5 +1,14 @@
 #!/bin/bash
-echo "Correcting filesystem permissions..."
+source bin/utils
+
+# help
+if [[ "$1" == "-h" ]]; then
+	title "fixperms" "$2Correct file permissions issues in container"
+	exit
+fi
+
+
+print_doing "Correcting filesystem permissions..."
 
 if [ -z "$1" ]; then
   bin/cmdnotty find var vendor pub/static pub/media app/etc -type f -exec chmod u+w {} \;
@@ -10,4 +19,4 @@ else
   bin/cmdnotty find $1 -type d -exec chmod u+w {} \;
 fi
 
-echo "Filesystem permissions corrected."
+print_success "Filesystem permissions corrected."

@@ -1,17 +1,22 @@
 #!/bin/bash
-# Import/export db in the 'db/' directory
-# bin/db -i path/to/my_db.sql
-# bin/db -e my_exported_db_name
 source bin/utils
 
-if [ -z "$1" ]; then
-	print_error "This command requires an argument."
-	echo "   If you want to import a db, use '-i'"
-	echo "   If you want to export a db, use '-e'"
+# help
+if [[ -z "$1" || "$1" == "-h" ]]; then
+	title "db" "$2Import/Export a database. *Requires an option"
+	opts  "  $2"
+	opt   "  $2-e" "Export DB to 'db/' directory"
+	opt   "    $2" "Can specify the name of the .sql filename"
+	opt   "    $2" "EX: bin/db -e my_database_name"
+	opt   "  $2-i" "Import DB"
+	opt   "    $2" "Requires path/filename of DB to import"
+	opt   "    $2" "EX: bin/db -i db/my_database_name"
+	exit
 fi
 
+
 # Export DB
-if [[ "$1" == "-e" ||  "$1" == "export" ]]; then
+if [[ "$1" == "-e" || "$1" == "export" ]]; then
 
 	if [ -z "$2" ]; then
 		TIME="$(date +'%y%m%d_%H%M%S')"

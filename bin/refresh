@@ -1,4 +1,12 @@
 #!/bin/bash
+source bin/utils
+
+if [[ -z "$1" || "$1" == "-h" ]]; then
+	title "refresh" "$2Makes sure Magento modules are up to date"
+	desc  "       $2Recompiles everything, cleans and flushes cache"
+	exit
+fi
+
 
 bin/magento setup:upgrade
 bin/magento setup:di:compile

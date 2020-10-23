@@ -1,8 +1,23 @@
 #!/bin/bash
-if [ ! -d pwa-studio ]; then
-    echo "PWA studio must first be installed by running bin/setup-pwa-studio"
-    exit
+source bin/utils
+
+# help
+if [[ "$1" == "-h" ]]; then
+	title "pwa-studio" "$2Download, install, and configure pwa-studio"
+	desc  "          $2NodeJS and Yarn must be installed first on host machine"
+	exit
 fi
 
-cd pwa-studio
+if [ ! -d pwa-studio ]; then
+		echo "Install NodeJS and Yarn on host machine, otherwise setup will fail"
+
+		BASE_URL=${1:-master-7rqtwti-mfwmkrjfqvbjk.us-4.magentosite.cloud}
+		git clone https://github.com/magento/pwa-studio.git
+		cd pwa-studio
+		yarn install
+		yarn buildpack create-custom-origin packages/venia-concept
+		MAGENTO_BACKEND_URL="https://$BASE_URL/" yarn buildpack create-env-file packages/venia-concept
+fi
+
+cd pwa-studio || exit
 NODE_TLS_REJECT_UNAUTHORIZED=0 yarn run watch:all

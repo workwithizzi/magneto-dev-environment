@@ -3,6 +3,16 @@ source env/db.env
 source bin/utils
 BASE_URL=${1:-$DEFAULT_URL}
 
+
+# help
+if [[ "$1" == "-h" ]]; then
+	title "setup" "$2Build images/containers and configure Magento using defaults from bin/utils"
+	opts  "        $2"
+	opt   "        $2\$1" "Magento URL"
+	exit
+fi
+
+
 bin/stop
 
 docker-compose -f docker-compose.yml up -d

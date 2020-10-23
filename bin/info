@@ -1,6 +1,16 @@
 #!/bin/bash
 source bin/utils
 
+# help
+if [[ "$1" == "-h" ]]; then
+	title "info" "$2Print info about Magento install based"
+	desc  "    $2on variables defained in bin/utils"
+	opts  "    $2"
+	opt   "    ${2}\$1" "url"
+	opt   "    ${2}\$2" "Magento version"
+	exit
+fi
+
 BASE_URL=${1:-$DEFAULT_URL}
 MAG_VERSION=${2:-$DEFAULT_MAGENTO_VERSION}
 
