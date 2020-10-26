@@ -2,7 +2,7 @@
 source bin/utils
 
 # help
-if [[ -z "$1" || "$1" == "-h" ]]; then
+if [[ "$1" == "-h" ]]; then
 	title "magento" "$2Runs 'bin/magento in container. Requires argument"
 	exit
 fi
