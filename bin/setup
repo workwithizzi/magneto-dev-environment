@@ -105,6 +105,12 @@ bin/cmdnotty bin/magento setup:static-content:deploy -f
 print_doing "Re-indexing with Elasticsearch..."
 bin/cmdnotty bin/magento indexer:reindex
 
+# print_doing "Disabling Two-Factor Authentication for dev"
+# composer require markshust/magento2-module-disabletwofactorauth
+# bin/magento module:enable MarkShust_DisableTwoFactorAuth
+# bin/magento setup:upgrade
+# bin/magento config:set twofactorauth/general/enable 0
+
 print_doing "Clearing the cache to apply updates..."
 bin/cmdnotty bin/magento cache:flush
 
