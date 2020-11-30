@@ -1,12 +1,19 @@
 #!/bin/bash
 source bin/utils
 
+# help
+if [[ "$1" == "-h" ]]; then
+	title "fixowns" "$2Correct file ownership issues in container"
+	exit
+fi
+
+
 print_doing "Correcting filesystem ownerships..."
 
 if [ -z "$1" ]; then
-  bin/rootnotty chown -R app:app /var/www/
+  bin/cmdrootnotty chown -R app:app /var/www/
 else
-  bin/rootnotty chown -R app:app /var/www/html/"$1"
+  bin/cmdrootnotty chown -R app:app /var/www/html/$1
 fi
 
 print_success "Filesystem ownerships corrected."

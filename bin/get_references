@@ -1,0 +1,21 @@
+#!/bin/bash
+
+source bin/utils
+
+# help
+# rsync -avz --progress --include="*.[php|xml|phtml|less]" --include="module-*/" --exclude="*" "core/vendor/magento/" "$HOME/Desktop/Magento_Reference"
+
+# rsync -avz --progress --include="*.[php|xml|phtml|less]" --include="module-*/" --exclude="*" "core/vendor/magento/" "$HOME/Desktop/Magento_Reference"
+
+rsync -avzm --progress --include=magento2-base/**.{'php','xml','phtml','less','js'} --include=theme-frontend-*/**.{'php','xml','phtml','less','js'} --include=module-*/**.{'php','xml','phtml','less','js'} --include="*/" --exclude="*" "core/vendor/magento/" "$HOME/Desktop/Magento_Reference"
+# rsync -avz --progress --include="module-*/" --exclude="*" "core/vendor/magento/" "$HOME/Desktop/Magento_Reference"
+
+rsync -avzm --progress "core/vendor/magento/theme-frontend-blank/" "$HOME/Desktop/Magento_Reference"
+
+cwd=$(pwd)
+
+cd "$HOME/Desktop/Magento_Reference" || exit
+
+find . -name "Test" -prune -exec rm -rf '{}' +
+
+cd "$cwd" || exit

@@ -1,0 +1,54 @@
+# Mark Shust's Docker Configuration for Magento
+# (https://github.com/markshust/docker-magento)
+#
+# Version 34.1.0
+
+version: "3"
+
+services:
+  app:
+    volumes: &appvolumes
+      # Host mounts with performance penalty, only put what is necessary here
+      # - ./core/composer.json:/var/www/html/composer.json:cached
+      # - ./core/composer.lock:/var/www/html/composer.lock:cached
+      # - ./core/app/code:/var/www/html/app/code:cached
+      # - ./core/app/design:/var/www/html/app/design:cached
+      # - ./core/app/etc:/var/www/html/app/etc:cached
+      - ./wip/index.php:/var/www/html/index.php:cached
+      - ./wip/composer.json:/var/www/html/composer.json:cached
+      - ./wip/composer.lock:/var/www/html/composer.lock:cached
+      - ./wip/app/code:/var/www/html/app/code:cached
+      - ./wip/app/design:/var/www/html/app/design:cached
+      - ./wip/app/etc:/var/www/html/app/etc:cached
+      - ./core/app/etc/di.xml:/var/www/html/app/etc/di.xml:cached
+      - ./core/app/etc/env.php:/var/www/html/app/etc/env.php:cached
+      - ./core/app/etc/NonComposerComponentRegistration.php:/var/www/html/app/etc/NonComposerComponentRegistration.php:cached
+      - ./core/app/etc/registration_globlist.php:/var/www/html/app/etc/registration_globlist.php:cached
+      - ./core/app/etc/vendor_path.php:/var/www/html/app/etc/vendor_path.php:cached
+      - ./core/nginx.conf.sample:/var/www/html/nginx.conf:cached
+      #- ./core/auth.json:/var/www/html/auth.json:cached
+      #- ./core/m2-hotfixes:/var/www/html/m2-hotfixes:cached
+      #- ./core/patches:/var/www/html/patches:cached
+      #- ./core/var/log:/var/www/html/var/log:cached
+      #- ./core/var/report:/var/www/html/var/report:cached
+      # To sync your SSH to the container, uncomment the following line:
+      #- ~/.ssh/id_rsa:/var/www/.ssh/id_rsa:cached
+      # Linux only: remove the above lines and mount the entire src directory with:
+      # - ./core:/var/www/html:cached
+
+  phpfpm:
+    volumes: *appvolumes
+    # Linux only: host.docker.internal doesn't exist https://github.com/docker/for-linux/issues/264
+    # Uncomment two lines below & replace IP with result of: docker run --rm alpine ip route | awk 'NR==1 {print $3}'
+    #extra_hosts:
+    #  - "host.docker.internal:IP"
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025"
+      - "8025:8025"
+
+  # Disabling cron by default as it uses higher CPU, enable if needed
+  #cron:
+  #  volumes: *appvolumes

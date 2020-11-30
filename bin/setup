@@ -1,0 +1,124 @@
+#!/bin/bash
+source env/db.env
+source bin/utils
+BASE_URL=${1:-$DEFAULT_URL}
+
+
+# help
+if [[ "$1" == "-h" ]]; then
+	title "setup" "$2Build images/containers and configure Magento using defaults from bin/utils"
+	opts  "        $2"
+	opt   "        $2\$1" "Magento URL"
+	exit
+fi
+
+
+bin/stop
+
+docker-compose -f docker-compose.yml up -d
+[ $? != 0 ] && print_error "Failed to start Docker services" && exit
+sleep 5 #Ensure containers are started...
+
+print_doing "Copying all files from host to container..."
+rm -rf "$CORE_DIR"/vendor #Clear for step below
+bin/copytocontainer -all
+
+bin/cmdnotty chmod u+x bin/magento
+
+if hash composer 2>/dev/null; then
+    PUBLIC_KEY="$(composer config -gl | grep '\[http-basic.repo.magento.com.username\]' | cut -c40-)"
+    PRIVATE_KEY="$(composer config -gl | grep '\[http-basic.repo.magento.com.password\]' | cut -c40-)"
+fi
+
+if [ -z "$PUBLIC_KEY" ] || [ -z "$PRIVATE_KEY" ]; then
+    exec < /dev/tty
+    echo
+    echo
+    echo "    Authentication required (repo.magento.com, public_key and private_key):"
+    read -p "        Username: " PUBLIC_KEY
+    read -p "        Password: " PRIVATE_KEY
+    echo
+    if [ -n "$PUBLIC_KEY" ] && [ -n "$PRIVATE_KEY" ] && hash composer 2>/dev/null; then
+        read -p "    Add authentication information to host composer config? y/n: " ADD_AUTH
+        echo
+        if [[ $ADD_AUTH =~ ^[Yy]$ ]]; then
+            composer global config http-basic.repo.magento.com $PUBLIC_KEY $PRIVATE_KEY
+        fi
+        ADD_AUTH=''
+    fi
+    exec <&-
+fi
+
+if [ -n "$PUBLIC_KEY" ] && [ -n "$PRIVATE_KEY" ]; then
+    bin/cmdnotty composer config http-basic.repo.magento.com $PUBLIC_KEY $PRIVATE_KEY
+    PUBLIC_KEY=''
+    PRIVATE_KEY=''
+fi
+
+print_doing "Forcing reinstall of composer deps to ensure perms & reqs..."
+bin/cmdnotty composer global require hirak/prestissimo
+bin/cmdnotty composer update
+
+bin/cmdnotty bin/magento setup:install \
+  --db-host="$MYSQL_HOST" \
+  --db-name="$MYSQL_DATABASE" \
+  --db-user="$MYSQL_USER" \
+  --db-password="$MYSQL_PASSWORD" \
+  --base-url="https://$BASE_URL/" \
+  --base-url-secure="https://$BASE_URL/" \
+  --backend-frontname="$LOGIN_URL" \
+  --admin-firstname="$ADMIN_FIRSTNAME" \
+  --admin-lastname="$ADMIN_LASTNAME" \
+  --admin-email="$ADMIN_EMAIL" \
+  --admin-user="$ADMIN_USERNAME" \
+  --admin-password="$ADMIN_PASSWORD" \
+  --language=en_US \
+  --currency=USD \
+  --timezone=America/New_York \
+  --amqp-host=rabbitmq \
+  --amqp-port=5672 \
+  --amqp-user=guest \
+  --amqp-password=guest \
+  --amqp-virtualhost=/ \
+  --cache-backend=redis \
+  --cache-backend-redis-server=redis \
+  --cache-backend-redis-db=0 \
+  --page-cache=redis \
+  --page-cache-redis-server=redis \
+  --page-cache-redis-db=1 \
+  --session-save=redis \
+  --session-save-redis-host=redis \
+  --session-save-redis-log-level=4 \
+  --session-save-redis-db=2 \
+  --search-engine=elasticsearch7 \
+  --elasticsearch-host=elasticsearch \
+  --use-rewrites=1
+
+print_doing "Turning on developer mode.."
+bin/cmdnotty bin/magento deploy:mode:set developer
+
+bin/cmdnotty bin/magento indexer:reindex
+
+print_doing "Forcing deploy of static content to speed up initial requests..."
+bin/cmdnotty bin/magento setup:static-content:deploy -f
+
+print_doing "Re-indexing with Elasticsearch..."
+bin/cmdnotty bin/magento indexer:reindex
+
+# print_doing "Disabling Two-Factor Authentication for dev"
+# composer require markshust/magento2-module-disabletwofactorauth
+# bin/magento module:enable MarkShust_DisableTwoFactorAuth
+# bin/magento setup:upgrade
+# bin/magento config:set twofactorauth/general/enable 0
+
+print_doing "Clearing the cache to apply updates..."
+bin/cmdnotty bin/magento cache:flush
+
+print_doing "Copying files from container to host after install..."
+bin/copyfromcontainer app
+bin/copyfromcontainer vendor
+
+print_doing "Generating SSL certificate..."
+bin/setup-ssl "$BASE_URL"
+
+print_success "Docker development environment setup complete."

@@ -1,2 +1,10 @@
 #!/bin/bash
+source bin/utils
+
+# help
+if [[ -z "$1" || "$1" == "-h" ]]; then
+	title "mysqldump" "$2Creates a DB dump wherever you pass in as the argument."
+	exit
+fi
+
 bin/n98-magerun2 db:dump --stdout "$@"

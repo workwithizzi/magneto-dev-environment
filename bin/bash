@@ -1,2 +1,16 @@
 #!/bin/bash
-bin/cli bash
+source bin/utils
+
+# help
+if [[ "$1" == "-h" ]]; then
+	title "bash" "$2Open interactive process in container as 'app' user"
+	opts  "    $2"
+	opt   "    $2-r" "Use 'root' user instead of 'app'"
+	exit
+fi
+
+# default
+[ -z "$1" ] && bin/cmd bash
+
+# Open as 'root' user
+[[ "$1" == "-r" || "$1" == "r" || "$1" == "root" ]] && bin/cmdroot bash

@@ -1,15 +1,27 @@
 #!/bin/bash
-# Print's info about the project for easy reference
-# source bin/utils
-# CONT="$CONT_MAGENTO"
+source bin/utils
+
+# help
+if [[ "$1" == "-h" ]]; then
+	title "info" "$2Print info about Magento install based"
+	desc  "    $2on variables defained in bin/utils"
+	opts  "    $2"
+	opt   "    ${2}\$1" "url"
+	opt   "    ${2}\$2" "Magento version"
+	exit
+fi
+
+BASE_URL=${1:-$DEFAULT_URL}
+MAG_VERSION=${2:-$DEFAULT_MAGENTO_VERSION}
 
 echo "::::::::::::::::::::::::"
 echo "::::::::::INFO::::::::::"
 echo "::::::::::::::::::::::::"
-echo "url:       https://$BASE_URL"
-echo "login:     https://$BASE_URL/$MAGENTO_ADMINURI"
-echo "username:  $MAGENTO_USERNAME"
-echo "password:  $MAGENTO_PASSWORD"
-echo "name:      $MAGENTO_FIRSTNAME $MAGENTO_LASTNAME"
-echo "email:     $MAGENTO_EMAIL"
+echo "url:             https://$BASE_URL"
+echo "login:           https://$BASE_URL/$LOGIN_URL"
+echo "username:        $ADMIN_USERNAME"
+echo "password:        $ADMIN_PASSWORD"
+echo "name:            $ADMIN_FIRSTNAME $ADMIN_LASTNAME"
+echo "email:           $ADMIN_EMAIL"
+echo "Magento Version: $MAG_VERSION"
 echo "::::::::::::::::::::::::"

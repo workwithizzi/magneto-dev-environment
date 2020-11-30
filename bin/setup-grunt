@@ -26,15 +26,15 @@ EOM
 if [ -z "$VENDOR_THEME" ] || [ -z "$THEME" ]; then
     echo "Using Magento/luma theme for grunt config"
     THEME=luma
-    bin/clinotty cp ./dev/tools/grunt/configs/themes.js ./dev/tools/grunt/configs/local-themes.js
+    bin/cmdnotty cp ./dev/tools/grunt/configs/themes.js ./dev/tools/grunt/configs/local-themes.js
 else
     echo "Using $VENDOR_THEME theme for grunt config"
     bin/node -e "$GEN_THEME_JS"
 fi
 
-bin/clinotty cp package.json.sample package.json
-bin/clinotty cp Gruntfile.js.sample Gruntfile.js
-bin/clinotty cp grunt-config.json.sample grunt-config.json
+bin/cmdnotty cp package.json.sample package.json
+bin/cmdnotty cp Gruntfile.js.sample Gruntfile.js
+bin/cmdnotty cp grunt-config.json.sample grunt-config.json
 bin/npm install ajv@^5.0.0 --save
 bin/npm install
 bin/magento cache:clean

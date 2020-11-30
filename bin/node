@@ -1,2 +1,11 @@
 #!/bin/bash
-bin/cli node "$@"
+source bin/utils
+
+# help
+if [[ "$1" == "-h" ]]; then
+	title "node" "$2Run 'node' in the container"
+	exit
+fi
+
+
+bin/cmd node "$@"

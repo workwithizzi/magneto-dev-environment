@@ -1,0 +1,24 @@
+#!/bin/bash
+# Originally called 'cli'
+source bin/utils
+
+if [[ -z "$1" || "$1" == "-h" ]]; then
+	title "hints" "$2Enable/disable template hints for development"
+	desc  "    $2(for interactive processes). Argument is required"
+	opts  "    $2"
+	opt   "    $2-e|enable" " Turns on template hints"
+	opt   "    $2-d|disable" "Turns off template hints"
+	exit
+fi
+
+if [[ "$1" == "-e" || "$1" == "enable" ]]; then
+	print_doing "Enabling Template Hints"
+	bin/magento dev:template-hints:enable
+fi
+
+if [[ "$1" == "-d" || "$1" == "disable" ]]; then
+	print_doing "Disabling Template Hints"
+	bin/magento dev:template-hints:disable
+fi
+
+bin/magento cache:flush

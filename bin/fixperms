@@ -1,15 +1,22 @@
 #!/bin/bash
 source bin/utils
 
+# help
+if [[ "$1" == "-h" ]]; then
+	title "fixperms" "$2Correct file permissions issues in container"
+	exit
+fi
+
+
 print_doing "Correcting filesystem permissions..."
 
 if [ -z "$1" ]; then
-  bin/clinotty find var vendor pub/static pub/media app/etc -type f -exec chmod u+w {} \;
-  bin/clinotty find var vendor pub/static pub/media app/etc -type d -exec chmod u+w {} \;
-  bin/clinotty chmod u+x bin/magento
+  bin/cmdnotty find var vendor pub/static pub/media app/etc -type f -exec chmod u+w {} \;
+  bin/cmdnotty find var vendor pub/static pub/media app/etc -type d -exec chmod u+w {} \;
+  bin/cmdnotty chmod u+x bin/magento
 else
-  bin/clinotty find "$@" -type f -exec chmod u+w {} \;
-  bin/clinotty find "$@" -type d -exec chmod u+w {} \;
+  bin/cmdnotty find $1 -type f -exec chmod u+w {} \;
+  bin/cmdnotty find $1 -type d -exec chmod u+w {} \;
 fi
 
 print_success "Filesystem permissions corrected."

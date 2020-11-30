@@ -1,2 +1,11 @@
 #!/bin/bash
-bin/cli npm "$@"
+source bin/utils
+
+# help
+if [[ "$1" == "-h" ]]; then
+	title "npm" "$2Run 'npm' in the container"
+	exit
+fi
+
+
+bin/cmd npm "$@"

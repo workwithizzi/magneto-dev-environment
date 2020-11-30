@@ -1,0 +1,36 @@
+#!/bin/bash
+source bin/utils
+
+# help
+if [[ "$1" == "-h" ]]; then
+	title "grunt-setup" "$2Installs and configures grunt to run in the container"
+	exit
+fi
+
+
+
+print_doing "Installing and configuring Grunt"
+bin/cmdroot npm install -g grunt-cli
+
+bin/cmd cp "package.json.sample" "package.json"
+bin/cmd cp "Gruntfile.js.sample" "Gruntfile.js"
+bin/cmd cp "grunt-config.json.sample" "grunt-config.json"
+
+REAL_WIP=$(cd -P "$WIP_DIR" && pwd)
+
+
+if [[ -f "$REAL_WIP/local-themes.js" ]]; then
+	print_doing "Moving your grunt config file to the container"
+	bin/copywiptocontainer "local-themes.js" "dev/tools/grunt/configs/local-themes.js"
+else
+	print_error "Looks like you're missing your grunt config file (local-themes.js)"
+fi
+
+print_doing "Updating npm packages"
+bin/cmd npm install
+bin/cmd npm update
+
+bin/grunt exec:Skeleton
+
+print_success "Finished. You can now use grunt by running:"
+echo "  bin/grunt <command>"

@@ -1,8 +1,9 @@
 
 ### Project ###
 .tmp/
-src/
+core/
 db/
+wip/
 
 ### VSCode ###
 .vscode/

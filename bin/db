@@ -1,0 +1,52 @@
+#!/bin/bash
+source bin/utils
+
+# help
+if [[ -z "$1" || "$1" == "-h" ]]; then
+	title "db" "$2Import/Export a database. *Requires an option"
+	opts  "  $2"
+	opt   "  $2-e" "Export DB to 'db/' directory"
+	opt   "    $2" "Can specify the name of the .sql filename"
+	opt   "    $2" "EX: bin/db -e my_database_name"
+	opt   "  $2-i" "Import DB"
+	opt   "    $2" "Requires path/filename of DB to import"
+	opt   "    $2" "EX: bin/db -i db/my_database_name"
+	exit
+fi
+
+
+# Export DB
+if [[ "$1" == "-e" || "$1" == "export" ]]; then
+
+	if [ -z "$2" ]; then
+		TIME="$(date +'%y%m%d_%H%M%S')"
+		FILE_NAME="${TIME}_magento.sql"
+	else
+		FILE_NAME="$2.sql"
+	fi
+
+	[ ! -d "db" ] && mkdir -p "db"
+
+	print_doing "Creating a db dump at db/$FILE_NAME"
+	bin/n98-magerun2 db:dump --stdout > "db/$FILE_NAME"
+fi
+
+# Import DB
+if [[ "$1" == "-i" ||  "$1" == "import" ]]; then
+
+	if [ -z "$2" ]; then
+		print_error "You need to include the path/filename of the db you want to import."
+		echo "   Available db files:"
+		find "_ref" "db" -name "*.sql"
+	else
+		if [ -f "$2" ]; then
+			print_doing "db found... importing"
+			bin/mysql < "$2"
+		else
+			print_error "Local db cannot be found"
+			echo "   Available db files:"
+			find "_ref" "db" -name "*.sql"
+		fi
+	fi
+
+fi

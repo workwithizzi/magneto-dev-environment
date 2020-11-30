@@ -1,40 +1,33 @@
 #!/bin/bash
 source bin/utils
-CONTAINER=$CONT_MAGENTO
 
-[ -z "$1" ] && print_error "Please specify a directory or file to copy to container (ex. vendor, -all)" && exit
+REAL_CORE=$(cd -P "$CORE_DIR" && pwd)
 
-REAL_SRC=$(cd -P "src" && pwd)
+# help
+if [[ -z "$1" || "$1" == "-h" ]]; then
+	title "copytocontainer" "$2Copy files and directories to the container. From:"
+	desc "               $2$REAL_CORE"
+	desc "               $2Fix file ownership and permissions"
+	opts "               $2"
+	opt "               $2-all" "Copy all files to web root"
+	opt "                   $2" "Specify a specific file/folder to copy"
+	exit
+fi
+
+DEST=${2:-$1}
 
 if [ "$1" == "-all" ]; then
-
-	if [ -d "$REAL_SRC/vendor" ]; then
-		echo "❓ Want to remove the Composer dependencies before copying? [y|n]"
-		echo "   Press [return] or 'y' to remove them"
-		read -r REPLY
-		REMOVE_DEPS="${REPLY:-y}"
-		if [[ $REMOVE_DEPS =~ ^[y]$ ]]; then
-			rm -rf "$REAL_SRC/vendor"
-			print_success "Dependencies removed"
-		fi
-	fi
-
-	##################################
-	# Getting error with this command but the syntax is right. I think it has something to do with files mounted as a volume?
-	# https://github.com/moby/moby/issues/22281
-	##################################
-  # docker cp $REAL_SRC/. 644b2c168ccf069b8fcbf8af550b709e614e2021f0dc4f95949425df50954d05:/var/www/html/
-  docker cp "$REAL_SRC"/. "$(docker-compose ps -q "$CONTAINER"|awk '{print $1}')":/var/www/temp/
-  print_success "Completed copying all files from host to container"
-  bin/fixowns
-  bin/fixperms
+	docker cp $REAL_CORE/./ $(docker-compose ps -q phpfpm|awk '{print $1}'):/var/www/html/
+	print_success "Completed copying all files from host to container"
+	bin/fixowns
+	bin/fixperms
 else
-  if [ -f "$REAL_SRC/$1" ]; then
-    docker cp "$REAL_SRC/$1" "$(docker-compose ps -q "$CONTAINER"|awk '{print $1}')":/var/www/html/"$1"
-  else
-    docker cp "$REAL_SRC/$1" "$(docker-compose ps -q "$CONTAINER"|awk '{print $1}')":/var/www/html/"$(dirname "$1")"
-  fi
-  print_success "Completed copying $1 from host to container"
-  bin/fixowns "$1"
-  bin/fixperms "$1"
+	if [ -f "$REAL_CORE/$1" ]; then
+		docker cp $REAL_CORE/$1 $(docker-compose ps -q phpfpm|awk '{print $1}'):/var/www/html/"$DEST"
+	else
+		docker cp $REAL_CORE/$1 $(docker-compose ps -q phpfpm|awk '{print $1}'):/var/www/html/$(dirname $DEST)
+	fi
+	print_success "Completed copying $1 from host to container"
+	bin/fixowns "$DEST"
+	bin/fixperms "$DEST"
 fi

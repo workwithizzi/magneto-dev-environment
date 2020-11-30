@@ -1,0 +1,11 @@
+#!/bin/bash
+# Originally called 'root'
+source bin/utils
+
+if [[ -z "$1" || "$1" == "-h" ]]; then
+	title "cmdroot" "$2Run a command in the container as 'root' while keeping TTY abilities"
+	desc  "       $2(for interactive processes). Argument is required"
+	exit
+fi
+
+docker-compose exec -u root phpfpm "$@"

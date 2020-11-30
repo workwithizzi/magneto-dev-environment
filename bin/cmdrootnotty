@@ -1,0 +1,12 @@
+#!/bin/bash
+# Originally called 'rootnotty'
+source bin/utils
+
+# help
+if [[ -z "$1" || "$1" == "-h" ]]; then
+	title "cmdrootnotty" "$2Run a command in the container as 'root' without TTY"
+	desc  "            $2(for non-interactive processes). Argument is required"
+	exit
+fi
+
+docker-compose exec -u root -T phpfpm "$@"

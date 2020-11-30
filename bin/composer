@@ -1,2 +1,12 @@
 #!/bin/bash
-bin/cli composer "$@"
+source bin/utils
+
+# help
+if [[ -z "$1" || "$1" == "-h" ]]; then
+	title "composer" "$2Run 'composer' command in container"
+	opts  "        $2"
+	opt   "        $2" "All standard composer options/commands"
+	exit
+fi
+
+bin/cmd composer "$@"

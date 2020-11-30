@@ -2,70 +2,62 @@
 # Install and initial setup of the project
 source bin/utils
 
+# help
+if [[ "$1" == "-h" ]]; then
+	title "init" "$2Initialize the project for the first time"
+	desc  "    $2Downloads Magento, builds images/containers, configures Magento"
+	opts  "    $2"
+	opt   "    $2-s" "Skip questions and use defaults defined in bin/utils"
+	exit
+fi
+
+
 # Gather project info:
 
 # Get the dev url, fall back to default
+BASE_URL=$DEFAULT_URL
 if [ "$1" != "-s" ]; then
 	echo "❓ What do you want the project url to be?"
 	echo "   Default: $DEFAULT_URL"
 	read -r REPLY_URL
 	BASE_URL=${REPLY_URL:-$DEFAULT_URL}
-else
-	BASE_URL=$DEFAULT_URL
-fi
-
-if [ "$1" != "-s" ]; then
-	echo "❓ Do you want to go ahead and install/configure Magento in the container? [y|n]"
-	read -r REPLY_CONFIG
-else
-	REPLY_CONFIG=y
-fi
-
-echo "❓ Do you want to go ahead and install/configure Magento? [y|n]"
-read -r REPLY_CONFIG
-
-# :::::::::::::::::::::::::::::::::::::
-
-# Download Magento core files and unzip to .tmp/
-bin/download "$1"
-
-# Merge core files from .tmp/ to src/
-bin/merge "$1"
-
-# Remove dependencies
-if [ -d "src/vendor" ]; then
-	rm -rf "src/vendor"
 fi
 
 # Create DNS host entry for the site on local machine:
 if [ "$1" != "-s" ]; then
 	echo "❓ Do you want to create a DNS entry on your machine for:"
-	echo "   $BASE_URL  ?  [y|n]"
+	echo "   $BASE_URL  ?  [y|N]"
 	read -r REPLY_DNS
 	if [[ $REPLY_DNS =~ ^[y]$ ]]; then
 		echo "127.0.0.1 ::1 $BASE_URL" | sudo tee -a /etc/hosts
 	fi
 fi
 
-# Stop any running containers
-bin/stop
-
-# Start/build containers
-docker-compose -f docker-compose.yml up -d
-
-# [ $? != 0 ] && print_error "Failed to start Docker services" && exit
-sleep 5 #Ensure containers are started...
-
-# Copy Magento files to container
-bin/copytocontainer -all
-
-# Install and configure Magento
-if [[ $REPLY_CONFIG =~ ^[y]$ ]]; then
-	bin/configure
+# Get Magento version
+MAG_VERSION="$DEFAULT_MAGENTO_VERSION"
+if [ "$1" != "-s" ]; then
+	echo "❓ Which version of Magento do you want to use?"
+	echo "   To include sample data, prefix the version with:"
+	echo "   with-samples-"
+	echo "   Default: $DEFAULT_MAGENTO_VERSION"
+	read -r REPLY_VERSION
+	MAG_VERSION=${REPLY_VERSION:-$DEFAULT_MAGENTO_VERSION}
 fi
 
-print_doing "Generating SSL certificate..."
-bin/setup-ssl "$BASE_URL"
+# Get config preference
+CONFIG_MAGENTO=y
+if [ "$1" != "-s" ]; then
+	echo "❓ Do you want to go ahead and install/configure Magento in the container? [Y|n]"
+	read -r REPLY_CONFIG
+	CONFIG_MAGENTO=${REPLY_CONFIG:-"y"}
+fi
 
-print_success "Docker development environment setup complete."
-print_success "You may now access your Magento instance at https://${BASE_URL}/"
+# :::::::::::::::::::::::::::::::::::::
+
+# Download Magento core files and unzip to .tmp/
+bin/download "$MAG_VERSION"
+
+# Setup and Configure container and Magento
+bin/setup "$BASE_URL"
+
+bin/info "$BASE_URL" "$MAG_VERSION"

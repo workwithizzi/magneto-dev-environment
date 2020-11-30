@@ -1,2 +1,10 @@
 #!/bin/bash
-bin/cli grunt "$@"
+source bin/utils
+
+# help
+if [[ "$1" == "-h" ]]; then
+	title "grunt" "$2Run 'grunt' in the container"
+	exit
+fi
+
+bin/cmd grunt "$@"

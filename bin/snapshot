@@ -1,0 +1,28 @@
+#!/bin/bash
+# Creates backup of mysql db and src directory
+source bin/utils
+
+TIME="$(date +'%y%m%d_%H%M%S')"
+
+if [ -z "$1" ]; then
+	TITLE="$TIME"
+else
+	TITLE="${TIME}-$1"
+fi
+
+if [ -d "_ref/snapshots/$TITLE" ]; then
+	TITLE="${TIME}-$TITLE"
+fi
+
+SNAPSHOT_DIR="_ref/snapshots/$TITLE"
+
+# Get backup of db
+bin/db -e "$TITLE"
+
+mkdir -p "$SNAPSHOT_DIR"
+
+print_doing "Moving db dump and a copy of the '$WIP_DIR' directory to:"
+echo "   $SNAPSHOT_DIR"
+
+mv "db/$TITLE.sql" "$SNAPSHOT_DIR/$TITLE.sql"
+cp -r "$WIP_DIR" "$SNAPSHOT_DIR/$WIP_DIR"

@@ -1,0 +1,27 @@
+#!/bin/bash
+source bin/utils
+
+REAL_WIP=$(cd -P "$WIP_DIR" && pwd)
+
+# help
+if [[ -z "$1" || "$1" == "-h" ]]; then
+	title "copywipfromcontainer" "$2Copy files and directories from the container to:"
+	desc  "                    $2$REAL_WIP"
+	opts  "                    $2"
+	opt   "                    $2-all" "Copy all files in web root"
+	opt   "                        $2" "Specify a specific file/folder to copy"
+	exit
+fi
+
+
+if [ "$1" == "-all" ]; then
+	docker cp $(docker-compose ps -q phpfpm|awk '{print $1}'):/var/www/html/./ $REAL_WIP/
+	print_success "Completed copying all files from container to host"
+else
+	if [ -f "$1" ] ; then
+		docker cp $(docker-compose ps -q phpfpm|awk '{print $1}'):/var/www/html/$1 $REAL_WIP/$1
+	else
+		docker cp $(docker-compose ps -q phpfpm|awk '{print $1}'):/var/www/html/$1 $REAL_WIP/$(dirname $1)
+	fi
+	print_success "Completed copying $1 from container to host"
+fi
