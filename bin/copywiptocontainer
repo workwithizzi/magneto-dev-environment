@@ -16,6 +16,7 @@ if [[ -z "$1" || "$1" == "-h" ]]; then
 	exit
 fi
 
+DEST=${2:-$1}
 
 if [ "$1" == "-all" ]; then
   docker cp $REAL_WIP/./ $(docker-compose ps -q phpfpm|awk '{print $1}'):/var/www/html/
@@ -24,11 +25,11 @@ if [ "$1" == "-all" ]; then
   bin/fixperms
 else
   if [ -f "$REAL_WIP/$1" ]; then
-    docker cp $REAL_WIP/$1 $(docker-compose ps -q phpfpm|awk '{print $1}'):/var/www/html/$1
+    docker cp $REAL_WIP/$1 $(docker-compose ps -q phpfpm|awk '{print $1}'):/var/www/html/$DEST
   else
-    docker cp $REAL_WIP/$1 $(docker-compose ps -q phpfpm|awk '{print $1}'):/var/www/html/$(dirname $1)
+    docker cp $REAL_WIP/$1 $(docker-compose ps -q phpfpm|awk '{print $1}'):/var/www/html/$(dirname $DEST)
   fi
   echo "Completed copying $1 from host to container"
-  bin/fixowns $1
-  bin/fixperms $1
+  bin/fixowns $DEST
+  bin/fixperms $DEST
 fi
