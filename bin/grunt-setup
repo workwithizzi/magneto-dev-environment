@@ -30,7 +30,11 @@ print_doing "Updating npm packages"
 bin/cmd npm install
 bin/cmd npm update
 
-bin/grunt exec:Skeleton
+echo "❓ What is the name of the Magento theme you are using for grunt? Ex: luma"
+	read -r THEME
+bin/grunt exec:"$THEME"
 
 print_success "Finished. You can now use grunt by running:"
 echo "  bin/grunt <command>"
+echo "To have grunt watch your files for changes, run:"
+echo "  bin/grunt watch:$THEME"
